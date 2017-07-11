@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 3MA</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @{
+        var userAccount = new _3MA.Controllers.RequestUser(User as System.Security.Claims.ClaimsPrincipal);
+    }
+
+    <script type="text/javascript">
+        // Order table row highlighter (Order/Index)
+        function ChangeColor(tableRow, highLight)
+        {
+            if (highLight) {
+                if (tableRow.style.backgroundColor == "rgb(255, 255, 255)") {       // 1
+                    tableRow.style.backgroundColor = 'rgb(150, 200, 225)';          // 2
+                }
+                else {
+                    tableRow.style.backgroundColor = 'rgb(50, 130, 175)';           // 4
+                }
+            }
+            else {
+                if (tableRow.style.backgroundColor == 'rgb(150, 200, 225)'          // 2
+                    || tableRow.style.backgroundColor == 'rgb(255, 255, 225)') {    // 1
+                    tableRow.style.backgroundColor = 'rgb(255, 255, 255)';          // 1
+                }
+                else {
+                    tableRow.style.backgroundColor = 'rgb(125, 180, 210)';          // 3
+                }
+            }
+        }
+
+        function ClickOn(tableRow, val) {
+            if (tableRow.style.backgroundColor == 'rgb(150, 200, 225)') {           // 2
+                tableRow.style.backgroundColor = 'rgb(125, 180, 210)';              // 3
+            }
+            else {
+                tableRow.style.backgroundColor = 'rgb(150, 200, 225)';              // 1
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Order/OrderListSave",
+                data: '{id: ' + val + ' }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            });
+        }
+
+        function onFilterProduct(loc, cat, col, name)
+        {
+            var xhr = HttpRequest('#productList');
+
+            if (col == "") { col = "null"; }
+            if (name == "") { name = "null"; }
+
+            var x = document.getElementById('dimXList').value;
+            if (x == "-") { x = "null";}
+
+            var y = document.getElementById('dimYList').value;
+            if (y == "-") { y = "null"; }
+
+            var z = document.getElementById('dimZList').value;
+            if (z == "-") { z = "null"; }
+
+            var price = document.getElementById('PriceList').value;
+            if (price == "-") { price = "null"; }
+
+            // configure the xhr object to fetch content
+            if (loc == 'product') {
+                xhr.open('get', '/product/search/' + cat + '/' + col + '/' + name, true);
+            }
+            else {
+                xhr.open('get', '/order/search/' + cat + '/' + col + '/' + name + '/' + x + '/' + y + '/' + z + '/' + price, true);
+            }
+
+            // fetch the content
+            xhr.send(null);
+        }
+
+        function DoNav(theUrl)
+        {
+            document.location.href = theUrl;
+        }
+
+
+        //$(function () {
+        //    $("#datepicker").datepicker();
+        //});
+
+    </script>
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Main", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Products", "Index", "Product")</li>
+                    <li>@Html.ActionLink("Packages", "Index", "Package")</li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        //if (User.IsInRole("Admin"))
+                        if (userAccount.IsAdmin)
+                        {
+
+                            <li>@Html.ActionLink("Account list", "Index", "AccountManager")</li>
+                            <li>@Html.ActionLink("Find account", "UserFinder", "AccountManager")</li>
+                        }
+                        @*<li>@Html.ActionLink("Order", "Order", "Package")</li>*@
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Order <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Packages", "Create", "Order")</li>
+                                @*<li>@Html.ActionLink("Products", "PCreate", "Order")</li>*@
+                                @if (User.IsInRole("Customer"))
+                                {
+                                    <li>@Html.ActionLink("Products", "Products_Order", "Order")</li>
+                                }
+                                else if(User.IsInRole("Admin") || User.IsInRole("Client"))
+                                {
+                                    <li>@Html.ActionLink("Products", "getEndUser", "Order")</li>
+                                    <li>@Html.ActionLink("All orders", "Index", "Order")</li>
+                                }
+                            </ul>
+                        </li>
+                        if (User.IsInRole("Customer"))
+                        {
+                            @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })*@
+                            <li>@Html.ActionLink("Edit account", "Edit", "Order")</li>
+                        }
+                    }
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - 3MA</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

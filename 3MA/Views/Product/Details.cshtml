@@ -1,0 +1,175 @@
+﻿@model _3MA.Controllers.ProductBase
+
+<div>
+    <h4>Product - <b><i><span style="font-family:'Times New Roman', Times, serif; color:darkblue">@Model.Name</span></i></b></h4>
+    <hr />
+
+    @if (Model.Image == "")
+    {
+        <div style="height:200px; text-align:center; vertical-align:bottom;">
+            <img src="~/images/warning.png" alt="Can't locate image'" style="width:auto; height:auto; border-radius: 5px; transform:translateY(50%);" />
+            <p style="color:darksalmon;transform:translateY(80%);">Error - broken image link. Please contact the admin for help.</p>
+        </div>
+    }
+    else
+    {
+        <img src=@Model.Image class="img-responsive" alt="I fail" style="width:auto; height:180px; border-radius: 5px; margin-top: 20px; margin-bottom: 20px;" />
+    }
+
+    <a href=@Model.Specs target="_blank" class="lookLikeButton">View Specs</a>
+
+    <br/>
+
+    @*<img src="@Url.Content(Model.Image)" alt="testing" />*@
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MainCategory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MainCategory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubCategory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubCategory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PriceCategory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PriceCategory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MFG_SKU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MFG_SKU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Collection)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Collection)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Finish)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Finish)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            $@Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            Dimensions
+        </dt>
+        
+        <dd>
+            @Html.DisplayFor(model => model.getDim)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SqFt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SqFt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PricePerSF)
+        </dt>
+
+        <dd>
+            $@Html.DisplayFor(model => model.PricePerSF)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Lbs)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lbs)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RHC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RHC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Core)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Core)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Strctr)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Strctr)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fnsh)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fnsh)
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

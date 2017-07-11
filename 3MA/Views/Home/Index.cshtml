@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@*<div class="jumbotron">
+    <h1>This is the home page</h1>
+    <p class="lead">This is the home page after logging in.</p>
+    <p><a href="http://petermcintyre.com/bti420/notes/mar08/" target="_blank" class="btn btn-primary btn-lg">More info &raquo;</a></p>
+</div>*@
+
+@*<div class="slider">
+    <ul class="rslides" id="slider">
+        <li class="first-slide w3ls">
+            <img src="~/images/slide-1.jpg" alt="Couch Hunter">
+            <h3>Luxurious Couches</h3>
+        </li>
+        <li class="second-slide aits">
+            <img src="http://www.cic.gc.ca/images/template/lp-visit.gif" alt="Couch Hunter">
+            <h3>Imported Leather Sofas</h3>
+        </li>
+    </ul>
+</div>*@
+
+@* .numbertext {
+      color: #f2f2f2;
+      font-size: 12px;
+      padding: 8px 12px;
+      position: absolute;
+      top: 0;
+    } *@
+
+<div class="slideshow-container">
+
+    <div class="mySlides fade">
+        <div class="numbertext">1 / 3</div>
+        <div class="img-header">3MA</div>
+        <img src="~/images/slide-1.jpg" style="width:100%">
+        <div class="text">Slide 1!</div>
+    </div>
+
+    <div class="mySlides fade">
+        <div class="numbertext">2 / 3</div>
+        <div class="img-header">3MA</div>
+        <img src="~/images/slide-2.jpg" style="width:100%">
+        <div class="text">Caption Two</div>
+    </div>
+
+    <div class="mySlides fade">
+        <div class="img-header">3MA</div>
+        <div class="numbertext">3 / 3</div>
+        <img src="~/images/slide-3.jpg" style="width:100%">
+        <div class="text">Caption Three</div>
+    </div>
+
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+<br>
+
+<div style="text-align:center">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+</div>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>News</h2>
+        <p>System or company news can go here</p>
+        <p>Instructions on how to use systems can also go here</p>
+        <p>Other text or links can go here aswell.</p>
+    </div>
+</div>
+
+<script>
+    var slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+      showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+      var i;
+      var slides = document.getElementsByClassName("mySlides");
+      var dots = document.getElementsByClassName("dot");
+      if (n > slides.length) {slideIndex = 1}
+      if (n < 1) {slideIndex = slides.length}
+      for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";
+      }
+      for (i = 0; i < dots.length; i++) {
+          dots[i].className = dots[i].className.replace(" active", "");
+      }
+      slides[slideIndex-1].style.display = "block";
+      dots[slideIndex-1].className += " active";
+    }
+</script>

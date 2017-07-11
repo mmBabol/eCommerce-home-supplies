@@ -1,0 +1,100 @@
+﻿@model _3MA.Controllers.OrderAddForm
+@using _3MA.Extensions
+
+@{
+    var suite_ = User.Identity.GetCustomerSuite();
+}
+
+@* Current customer information *@
+@if (User.IsInRole("Customer"))
+{
+    <h3>Customer information</h3>
+    <dl class="dl-horizontal">
+        <dt>
+            Suite
+        </dt>
+
+        <dd>
+            @User.Identity.GetCustomerSuite()
+        </dd>
+
+        <dt>
+            Floor plan
+        </dt>
+        <dd>
+            @User.Identity.GetCustomerFloorPlan()
+        </dd>
+
+        <dt>
+            Name
+        </dt>
+        <dd>
+            @User.Identity.Name
+        </dd>
+
+    </dl>
+}
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>OrderAddForm</h4>
+        <hr />
+        
+        @* Generates a validation summary incase of error *@
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+
+        @* Suite number *@
+        <div class="hidden">
+            <input id="Suite1" name="Suite" value=@User.Identity.GetCustomerSuite() type="text" />
+        </div>
+
+        @* MyProperty *@
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.MyProperty, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MyProperty, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MyProperty, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        @* Package choices *@
+        @foreach (var pkg in Model.OrderWithPackageList)
+        {
+            @*<div style="width:200px;height:200px;border:1px solid #000;background:#4cff00">this will be an image</div>*@
+            <label>
+                <input type="radio" name="PackageId" value="@pkg.Id"/> 
+                <img src=@pkg.ImgURL style="width:200px; height:200px; border-radius: 5px;" />
+            </label>
+        }
+
+
+
+
+
+        @* Lighting upgrades *@
+        <div class="form-group">
+            @Html.LabelFor(model => model.LightUpgrade, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.LightUpgrade)
+                    @Html.ValidationMessageFor(model => model.LightUpgrade, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Cancel", "Index", "Home")
+</div>

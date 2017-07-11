@@ -1,0 +1,42 @@
+﻿@model Dictionary<string, Tuple<string, bool>>
+@*@model Dictionary<int, bool>*@
+
+<script src="~/Scripts/core.js"></script>
+
+<h4>Please select Order</h4>
+
+<p>
+    Home Owner:
+    <select name="suiteNum" id="order_list" style="width: 300px; height: 25px;" @*onchange="@{TempData["SuiteID"] = "getSuite()";} onload="onClickOrder()"*@>
+        <option>-</option>
+        @foreach (var suit in Model)
+        {
+            // TODO: Add completed order image & message
+            @*if (suit.Value)
+            {
+                <option style="background-color: #b3ffb3;" >@suit.Key</option>
+            }
+            else
+            {
+                <option style="background-color: #ffb3b3;">@suit.Key </option>
+            }*@
+
+            if (suit.Value.Item2)
+            {
+                <option style="background-color: #b3ffb3;">@suit.Value.Item1</option>
+            }
+            else
+            {
+                <option style="background-color: #ffb3b3;">@suit.Value.Item1 </option>
+            }
+        }
+    </select>
+    <img src="~/images/next.png" style="cursor: pointer" onclick="getCustomerId()"/>
+</p>
+
+@*
+    onmouseover="this.style.cursor='hand'" onmouseout="this.style.cursor='default'"
+    onclick="location.href='@Url.Action("Products_Order", "Order")'"
+*@
+
+<div id="suite_order"></div>

@@ -1,0 +1,122 @@
+﻿@model _3MA.Controllers.POrderAddForm
+
+@{
+    bool cheddar = true;
+}
+
+<div class="POnavbar">
+    <a href="#paint">Paint</a>
+    <a href="#mill">Millwork</a>
+    <a href="#floor">Flooring</a>
+    <a href="#light">Lighting</a>
+    <a href="#tiles">Tiles</a>
+    <a href="#door">Trim/Door</a>
+
+</div>
+
+
+<div>
+    <h4>OrderAdd</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Suite)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Suite)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LightUpgrade)
+        </dt>
+
+        <dd>
+            @*@Html.DisplayFor(model => model.LightUpgrade)*@
+            @if (Model.LightUpgrade)
+            {
+                <p>Yes</p>
+            }
+            else
+            {
+                <p>No</p>
+            }
+        </dd>
+    </dl>
+    
+    <div id="floating-box">position: absolute</div>
+    <div id="longbox"></div>
+
+    @if (Model.AllProducts.Count() != 0)
+    {
+        <p><b>Products in this package</b></p>
+        <table class="table-hover padding">
+            <tr>
+                <th></th>
+                <th>
+                    Product name
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Sub category
+                </th>
+                <th>
+                    Price
+                </th>
+            </tr>
+            @foreach (var item in Model.AllProducts)
+            {
+                <tr>
+                    <td>
+                        @if (item.Image == "")
+                        {
+                            <img src="~/images/no_preview.png" alt="Can't locate image'" style="width:auto; height:auto; border-radius: 5px;" />
+                        }
+                        else
+                        {
+                            <img src=@item.Image style="width:200px; height:200px; border-radius: 5px;" />
+                        }
+                        @*@@Html.HiddenFor(m => Model.)
+                            <div class="hidden">
+                                <input id="Suite1" name="Suite" value=@User.Identity.GetCustomerSuite() type="text" />
+                            </div>
+                            @Model.AllProducts.Add(item)
+                            @Model.IdProductList.Add(item.Id)*@
+
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.MainCategory
+                    </td>
+                    <td>
+                        @item.SubCategory
+                    </td>
+                    <td>
+                        @item.Price
+                    </td>
+                </tr>
+            }
+
+
+        </table>
+
+    }
+    else
+    {
+        cheddar = false;
+        <p>There seems to be no products in this package. Please choose a different package.</p>
+    }
+
+</div>
+
+<p>
+    @Html.ActionLink("Back to List", "Create", null, new { @class = "btn btn-success" })
+    @if (cheddar)
+    {
+        @Html.ActionLink("Confirm", "PAccept", Model, new { @class = "btn btn-success" })
+    }
+</p>

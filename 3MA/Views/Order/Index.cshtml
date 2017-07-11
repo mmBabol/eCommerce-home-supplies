@@ -1,0 +1,81 @@
+﻿@model IEnumerable<_3MA.Controllers.POrderBase>
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+
+@{
+    List<int> ids = new List<int>();
+}
+
+<br/>
+@Html.ActionLink("Create all", "CreatePO", null, new { @class = "btn btn-primary" })
+
+<table class="table table-responsive">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Suite)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Plan)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LightUpgrade)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Completed)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MoveIn)
+        </th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr onmouseover="ChangeColor(this, true);" onmouseout="ChangeColor(this, false);" onclick="ClickOn(this, @item.Id);"
+        style="background-color: rgb(255, 255, 255);">
+        <td>
+            @Html.DisplayFor(modelItem => item.Suite)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Plan)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LightUpgrade)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Completed)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.getHPhone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.getMPhone)
+        </td>
+        <td>
+            @item.MoveIn.ToString("MM/dd/yyyy")
+            @*@Html.DisplayFor(modelItem => item.MoveIn)*@
+        </td>
+
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

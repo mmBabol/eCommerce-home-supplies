@@ -1,0 +1,132 @@
+﻿@model _3MA.Controllers.ProductSearchForm
+
+<hr/>
+
+<script src="~/Scripts/partials.js"></script>
+
+@{ 
+    string[] types = { "All", "Engineered Hardwood", "Laminate", "Vinyl",
+        "Adhesive", "Underlay", "Cork", "Solid Hardwood", "Other"};
+    }
+
+<h4>Select a Sub Category</h4>
+<br />
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'All' )">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[0]</p>
+@*    </a>*@
+</dev>
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'Engineered Hardwood')">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[1]</p>
+    @*</a>*@
+</dev>
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'Laminate')">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[2]</p>
+    @*</a>*@
+</dev>
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'Vinyl')">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[3]</p>
+@*    </a>*@
+</dev>
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'Adhesive')">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[4]</p>
+    @*</a>*@
+</dev>
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'Underlay')">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[5]</p>
+@*    </a>*@
+</dev>
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'Cork')">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[6]</p>
+    @*</a>*@
+</dev>
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'Solid Hardwoord')">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[7]</p>
+    @*</a>*@
+</dev>
+
+<dev class="tainer" onclick="onClickSub('Flooring', 'Other')">
+    @*<a href="@Url.Action("Tiles", "Product", null)">*@
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[8]</p>
+    @*</a>*@
+</dev>
+
+<br/><br />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @* Colour *@
+        @Html.ValidationSummary(true,"", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.colour, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="cold=md-10">
+                @Html.EditorFor(model => model.colour, new { htmlAttributes = new { @class = "form-control", @id = "filterColour", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.colour, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @* Species *@
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.species, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="cold=md-10">
+                @Html.EditorFor(model => model.species, new { htmlAttributes = new { @class = "form-control", @id = "filterName", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.species, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @* Dimensions *@
+        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.colour, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="cold=md-10">
+                @Html.EditorFor(model => model.colour, new { htmlAttributes = new { @class = "form-control", @id = "filterColour", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.colour, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+
+        @* 
+        ATTENTION - to add more search fields into flooring, add all necessary forms up above, 
+            then pass all the values to the filterProduct JS function. Pass the arguments along with '/product/search/'.
+            In the controller, add the extra argument inside the routing attribute. Make sure that the name is the exact
+            same as the argument.
+        *@
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Search" class="btn btn-default" onclick="filterProduct('product', 'Flooring', filterColour.value, filterName.value)" />
+            </div>
+        </div>
+
+    </div>
+}
+
+<div id="productList"></div>

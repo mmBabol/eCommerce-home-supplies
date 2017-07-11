@@ -1,0 +1,3 @@
+http://admin3ma-001-site1.gtemurl.com:8172/msdeploy.axd?site=admin3ma-001-site1
+http://admin3ma-001-site1.dtempurl.com/
+<!-- TODO - REMOVE DEBUG=TRUE WHEN PUBLISHING -->

@@ -1,0 +1,172 @@
+﻿@model _3MA.Controllers.POrderBase
+
+@{
+    bool cheddar = true;
+}
+
+@*<div class="POnavbar">
+    <a href="#paint">Paint</a>
+    <a href="#mill">Millwork</a>
+    <a href="#floor">Flooring</a>
+    <a href="#light">Lighting</a>
+    <a href="#tiles">Tiles</a>
+    <a href="#door">Trim/Door</a>
+
+</div>*@
+
+
+<div>
+    <h4>Order</h4>
+    <hr />
+
+    <div class="box">
+        <table class="table table-responsive" style="border: none;">
+            <tr style="border: none;">
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr style="border: none;">
+                <td>
+                    Name
+                    <br />
+                    <b><span class="zinger">@Model.Name</span></b>
+                </td>
+                <td>
+                    Home phone
+                    <br />
+                    <b><span class="zinger">@Model.getHPhone</span></b>
+                </td>
+                <td>
+                    Address
+                    <br />
+                    <b><span class="zinger">@Model.getAddress</span></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Move in date
+                    <br />
+                    <b><span class="zinger">@Model.MoveIn.ToString("MM/dd/yyyy")</span></b>
+                </td>
+                <td>
+                    Mobile phone
+                    <br />
+                    <b><span class="zinger">@Model.getMPhone</span></b>
+                </td>
+                <td>
+                    House floor plan
+                    <br />
+                    <b><span class="zinger">@Model.Plan</span></b>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    @*@Html.DisplayFor(model => model.LightUpgrade)*@
+    Lighting upgrades
+    @if (Model.LightUpgrade)
+    {
+        <p>Yes</p>
+    }
+    else
+    {
+        <p>No</p>
+    }
+
+    <div id="floating-box">position: absolute</div>
+    <div id="longbox"></div>
+
+    @if (Model.AllProducts.Count() != 0)
+    {
+        <p><b>Products selected</b></p>
+        <table class="text-center center-vertical table-responsive" id="productsTable">
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.AllProducts)
+            {
+                <tr style="border-top: 1px solid #000000">
+                    <td rowspan="2" style="border-bottom: 1px solid #000000">
+
+                            @if (item.Image == "")
+                            {
+                                <img src="~/images/no_preview.png" alt="Cant locate image" style="width:auto; height:auto; border-radius: 5px;" />
+                            }
+                            else
+                            {
+                                <img src=@item.Image class="img-responsive" alt="I fail" style="width:auto; height:auto;
+                                min-height:50px; max-height: 180px; border-radius: 5px; margin-top: 20px; margin-bottom: 20px;" />
+                            }
+                    </td>
+
+                    <td style="vertical-align:middle;">
+                        @Html.DisplayFor(modelItem => item.MFG_SKU)
+                    </td>
+                    <td style="vertical-align:middle;">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td colspan="2" style="vertical-align:middle;">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td style="border-top: none; vertical-align:middle;">
+                        <b>Size</b><br />
+                        @Html.DisplayFor(modelItem => item.getDim)
+                    </td>
+                    <td align="center" style="vertical-align:middle; align-content: center; ">
+                        <a href=@item.Specs target="_blank" class="lookLikeButton">View Specs</a>
+                    </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid #000000">
+                    <td style="border-top: none; vertical-align:middle; border-bottom: 1px solid #000000">
+                        <b>Collection</b><br />
+                        @Html.DisplayFor(modelItem => item.Collection)
+                    </td>
+                    <td style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000">
+                        <b>Finish</b><br />
+                        @Html.DisplayFor(modelItem => item.Finish)
+                    </td>
+                    <td style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000">
+                        <b>Price</b><br />
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000">
+                        <b>Price Category</b><br />
+                        <b>@Html.DisplayFor(modelItem => item.PriceCategory)</b>
+                    </td>
+                    <td colspan="2" style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000">
+                        @Html.DisplayFor(modelItem => item.PricePerSF)
+                        @Html.DisplayFor(modelItem => item.SqFt)
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    }
+    else
+    {
+        cheddar = false;
+        <p>To create an order, please select products.</p>
+    }
+
+</div>
+
+<br/>
+
+<p>
+    @Html.ActionLink("Back to List", "Products_Order", null, new { @class = "btn btn-success" })
+    @if (cheddar)
+    {
+        ViewBag.suite = Model.Suite;
+        @Html.ActionLink("Confirm", "Order_Accept", new { suite = Model.Suite }, new { @class = "btn btn-success" })
+    }
+</p>

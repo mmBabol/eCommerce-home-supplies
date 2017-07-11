@@ -1,0 +1,150 @@
+﻿@model _3MA.Controllers.ProductSearchForm
+@using _3MA.Extensions
+
+<hr/>
+
+<script src="~/Scripts/core.js"></script>
+
+@{ 
+    string[] types = { "All", "Engineered Hardwood", "Laminate", "Vinyl",
+        "Adhesive", "Underlay", "Cork", "Solid Hardwood", "Other"};
+    }
+
+<h4>Select a Sub Category</h4>
+<br />
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'All')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[0]</p>
+</dev>
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'Engineered Hardwood')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[1]</p>
+</dev>
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'Laminate')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[2]</p>
+</dev>
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'Vinyl')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[3]</p>
+</dev>
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'Adhesive')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[4]</p>
+</dev>
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'Underlay')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[5]</p>
+</dev>
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'Cork')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[6]</p>
+</dev>
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'Solid Hardwoord')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[7]</p>
+</dev>
+
+<dev class="tainer" onclick="onClickSubOrder('Flooring', 'Other')">
+        <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+        <p class="ext">@types[8]</p>
+</dev>
+
+<br/><br />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @* TODO: fix the formatting *@
+
+        @*Species*@
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.species, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="cold=md-10">
+                @Html.EditorFor(model => model.species, new { htmlAttributes = new { @class = "form-control", @id = "filterName", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.species, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+          @*Colour*@  
+        @Html.ValidationSummary(true,"", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.colour, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="cold=md-10">
+                @Html.EditorFor(model => model.colour, new { htmlAttributes = new { @class = "form-control", @id = "filterColour", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.colour, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <br/><br />
+            <b>Dimension X</b>
+            <select name="dimXList" id="dimXList" style="width: 150px; height: 30px;">
+                <option>-</option>
+                @foreach (var x in Model.dimX)
+            {
+                    <option>@x</option>
+                }
+            </select>
+
+            <br /><br />
+            <b>Dimension Y</b>
+            <select name="dimYList" id="dimYList" style="width: 150px; height: 30px;">
+                <option>-</option>
+                @foreach (var y in Model.dimY)
+                {
+                    <option>@y</option>
+                }
+            </select>
+
+            <br /><br />
+            <b>Dimension Z</b>
+            <select name="dimZList" id="dimZList" style="width: 150px; height: 30px;">
+                <option>-</option>
+                @foreach (var z in Model.dimZ)
+                {
+                    <option>@z</option>
+                }
+            </select>
+            <br /><br />
+
+            <b>Price Category</b>
+            <select name="PriceList" id="PriceList" style="width: 150px; height: 30px;">
+                <option>-</option>
+                @foreach (var p in Model.PriceCat)
+                {
+                    <option>@p</option>
+                }
+            </select>
+
+            <br /><br />
+
+            @*ATTENTION - to add more search fields into flooring, add all necessary forms up above,
+            then pass all the values to the filterProduct JS function. Pass the arguments along with '/product/search/'.
+            In the controller, add the extra argument inside the routing attribute. Make sure that the name is the exact
+            same as the argument.*@
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" value="Search" class="btn btn-default" onclick="onFilterProduct('order', 'Flooring', filterColour.value, filterName.value)" />
+                </div>
+            </div>
+
+        @*"filterProduct('order', 'Flooring', filterColour.value, filterName.value)"*@
+
+        @*<label style="border: 1px solid #0094ff; cursor:pointer; border-radius: 2px; margin:10px; padding: 7px" onclick="filterProduct('order', 'Flooring', filterColour.value, filterName.value)">Press me!</label>*@
+
+        </div>
+}
+
+<div id="productList"></div>

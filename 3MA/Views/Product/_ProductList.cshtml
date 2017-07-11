@@ -1,0 +1,91 @@
+﻿@model IEnumerable<_3MA.Controllers.ProductBase>
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+<table class="text-center center-vertical table-responsive">
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {               
+        <tr style="border-top: 1px solid #000000">
+            <td rowspan="4" style="border-bottom: 1px solid #000000">
+                @*<img src="@Html.DisplayFor(Image => item.Image)" style="width:auto; height:300px; border-radius: 5px;" />*@
+                @if (item.Image == "")
+                {
+                    <div style="height:200px; text-align:center; vertical-align:bottom;">
+                        <img src="~/images/warning.png" alt="Can't locate image'" style="width:auto; height:auto; border-radius: 5px; transform:translateY(50%);" />
+                        <p style="color:darksalmon;transform:translateY(80%);">Error - broken image link. Please contact the admin for help.</p>
+                    </div>
+                }
+                else
+                {
+                    <img src=@item.Image class="img-responsive" alt="I fail" style="width:auto; height:auto; min-height:60px; max-height:180px; border-radius: 5px; margin-top: 20px; margin-bottom: 20px;" />
+                }
+            </td>
+            
+            <td rowspan="2" style="vertical-align:middle;">
+                @Html.DisplayFor(modelItem => item.MFG_SKU)
+            </td>
+            <td rowspan="2" style="vertical-align:middle;">
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td rowspan="2" colspan="2" style="vertical-align:middle;">
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td colspan="2" style="vertical-align:middle;">
+                <div class="success">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="btn">
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary" })
+                </div>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td rowspan="2" style="border-top: none; vertical-align:middle; border-bottom: 1px solid #000000">
+                <b>Collection</b><br />
+                @Html.DisplayFor(modelItem => item.Collection)
+            </td>
+            <td rowspan="2" style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000">
+                <b>Finish</b><br />
+                @Html.DisplayFor(modelItem => item.Finish)
+            </td>
+            <td rowspan="2" style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000">
+                <b>Price</b><br />
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td rowspan="2" style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000">
+                <b>Price Category</b><br />
+                <b>@Html.DisplayFor(modelItem => item.PriceCategory)</b>
+            </td>
+            <td style="border-bottom: none; vertical-align:middle;">
+                <div class="btn-default">
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-primary" })
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="border: none; vertical-align:middle;">
+                <a href=@item.Specs target="_blank" class="lookLikeButton">View Specs</a>
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,166 @@
+﻿@model _3MA.Controllers.POrderBase
+    @using _3MA.Extensions
+
+@{ 
+    Session["Order"] = new List<int>();
+}
+
+@Styles.Render("~/Content/Site")
+<script src="~/Scripts/core.js"></script>
+<script src="~/Scripts/partials.js"></script>
+
+<br/>
+
+<div class="box">
+    <table class="table table-responsive" style="border: none;">
+        <tr style="border: none;">
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr style="border: none;">
+            <td>
+                Name
+                <br />
+                <b><span class="zinger">@Model.Name</span></b>
+            </td>
+            <td>
+                Home phone
+                <br />
+                <b><span class="zinger">@Model.getHPhone</span></b>
+            </td>
+            <td>
+                Address
+                <br />
+                <b><span class="zinger">@Model.getAddress</span></b>
+                <br/>
+                <b><span class="zinger">@Model.getProv</span></b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Move in date
+                <br />
+                <b><span class="zinger">@Model.MoveIn.ToString("MM/dd/yyyy")</span></b>
+            </td>
+            <td>
+                Mobile phone
+                <br />
+                <b><span class="zinger">@Model.getMPhone</span></b>
+            </td>
+            <td>
+                House floor plan
+                <br />
+                <b><span class="zinger">@Model.Plan</span></b>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<br />
+
+<h4>Select a Category</h4>
+<br />
+
+<dev class="tainer" onclick="onClickMain('Paint_order')">
+    <img src="~/images/ico_paint.jpg" class="ext-ico" />
+    <p class="ext">Paint</p>
+</dev>
+
+<dev class="tainer" onclick="onClickMain('Millwork_order')">
+    <img src="~/images/ico_millwork.jpg" class="ext-ico" />
+    <p class="ext">Millwork</p>
+</dev>
+
+<dev class="tainer" onclick="onClickMain('Tiles_order')">
+    <img src="~/images/ico_tiles.jpg" class="ext-ico" />
+    <p class="ext">Tiles</p>
+</dev>
+
+<dev class="tainer" onclick="onClickMain('Flooring_order')">
+    <img src="~/images/ico_flooring.jpg" class="ext-ico" />
+    <p class="ext">Flooring</p>
+</dev>
+
+<dev class="tainer" onclick="onClickMain('Lighting_order')">
+    <img src="~/images/ico_lighting.jpg" class="ext-ico" />
+    <p class="ext">Lighting</p>
+</dev>
+
+<dev class="tainer" onclick="onClickMain('Door_order')">
+    <img src="~/images/ico_door.jpg" class="ext-ico" />
+    <p class="ext">Trim/Door</p>
+</dev>
+
+<dev class="tainer" onclick="onClickMain('Plumbing_order')">
+    <img src="~/images/ico_plumbing.jpg" class="ext-ico" />
+    <p class="ext">Fixtures</p>
+</dev>
+
+<dev class="tainer" onclick="onClickMain('Appliances_order')">
+    <img src="~/images/ico_appliances.jpg" class="ext-ico" />
+    <p class="ext">Appliances</p>
+</dev>
+
+ <br/>
+
+
+<div id="subCategory"></div>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @* Hidden inputs *@
+    <div class="hidden">
+        <input id="Name" name="Name" value=@Model.Name type="text" />
+    </div>
+
+    <div class="hidden">
+        <input id="Suite" name="Suite" value=@Model.Suite type="text" />
+    </div>
+
+    <div class="hidden">
+        <input id="HPhone" name="HPhone" value=@Model.HPhone type="text" />
+    </div>
+
+    <div class="hidden">
+        <input id="MPhone" name="MPhone" value=@Model.MPhone type="text" />
+    </div>
+
+    <div class="hidden">
+        <input id="Plan" name="Plan" value=@Model.Plan type="text" />
+    </div>
+
+    <div class="hidden">
+        <input id="MoveIn" name="MoveIn" value=@Model.MoveIn type="text" />
+    </div>
+
+    <div class="hidden">
+        <input id="Id" name="Id" value=@Model.Id type="text" />
+    </div>
+
+    @* Lighting upgrades *@
+    <div class="form-group">
+        @Html.LabelFor(model => model.LightUpgrade, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.LightUpgrade)
+                @Html.ValidationMessageFor(model => model.LightUpgrade, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    
+    <a name="bottom"></a>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<br/>
+
+<br/>

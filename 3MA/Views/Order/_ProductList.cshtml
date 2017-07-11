@@ -1,0 +1,157 @@
+﻿@model _3MA.Controllers.POrderBase
+
+<script src="~/Scripts/core.js"></script>
+
+@*@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()*@
+    <div class="form-horizontal">
+        <hr />
+
+        @* Generates a validation summary incase of error *@
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <a name="productsAnchor"></a>
+
+        <table class="text-center center-vertical table-responsive" id="productsTable">
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.AllProducts)
+            {
+                //ternary operator to change tr background if checked
+                //@( (Model.IdProductList.Contains(@item.Id)) ? "background-color: red;" : "background-color: blue;";)
+                //style="border-top: 1px solid #000000; background-color: red;"
+                //<tr class=@((Model.IdProductList.Contains(item.Id)) ? "unselected" : "selected")>
+                // = (Model.IdProductList.Contains(item.Id)) ? "selected" : "unselected";
+                //<tr class="@css">
+                //string css;
+                //if (Model.IdProductList.Contains(item.Id))
+                //{
+                //    css = "selected";
+                //}
+                //else
+                //{
+                //    css = "unselected";
+                //}
+
+                <tr style="border-top: 1px solid #000000" @*onclick="alert('wtfsake')"*@>
+                    <td rowspan="2" style="border-bottom: 1px solid #000000">
+
+                        <label>
+                            @if (Model.IdProductList.Contains(@item.Id))
+                            {
+                                <input id="@item.Id" type="checkbox" onclick="onImgClick(@item.Id); QtyChange(@item.Id, 0);" name="IdProductList" value="@item.Id" onmousedown="test(@item.Id)" checked />
+                            }
+                            else
+                            {
+                                <input id="@item.Id" type="checkbox" onclick="onImgClick(@item.Id); QtyChange(@item.Id, 0);" name="IdProductList" value="@item.Id" onmousedown="test(@item.Id)" />
+
+                            }
+
+                            @if (item.Image == "")
+                            {
+                                <img src="~/images/no_preview.png" alt="Cant locate image" style="width:auto; height:auto; border-radius: 5px;" />
+
+                            }
+                            else
+                            {
+                                <img src=@item.Image class="img-responsive" alt="I fail" style="width:auto; height:auto; 
+                                min-height:50px; max-height: 180px; border-radius: 5px; margin-top: 20px; margin-bottom: 20px;" />
+                            }
+                        </label>
+                    </td>
+
+                    <td style="vertical-align:middle;">
+                        @Html.DisplayFor(modelItem => item.MFG_SKU)
+                        <br/><br />
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <b>Collection</b><br />
+                        @Html.DisplayFor(modelItem => item.Collection)
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <b>Finish</b><br />
+                        @Html.DisplayFor(modelItem => item.Finish)
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <b>Price Category</b>
+                        <br/>
+                        @Html.DisplayFor(modelItem => item.PriceCategory)
+                    </td>
+                    <td style="border-top: none; vertical-align:middle;">
+                        <b>Size</b><br />
+                        @Html.DisplayFor(modelItem => item.getDim)
+                    </td>
+                    <td align="center" style="vertical-align:middle; align-content: center; ">
+                        <a href=@item.Specs target="_blank" class="lookLikeButton" style="margin-left: 10px;">View Specs</a>
+                    </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid #000000">
+                    <td colspan="2" style="border-top: none; vertical-align:middle; border-bottom: 1px solid #000000">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+
+                    <td colspan="2" style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000;">
+                        @{ 
+                            var locVar = "Loc-" + item.Id;
+                            var imgNext = "Next-" + item.Id;
+
+                            string location;
+                            if (!Model.Room.TryGetValue(item.Id, out location))
+                            {
+                                location = "-";
+                            }
+                        }    
+
+                        <b></b>
+                        <br /><br />
+                        <input type="text" id=@locVar name=@locVar style="float: left; width:auto; text-align:center; margin-left:10px;" value=@location @*onkeyup="onLocationUpdate(@item.Id)"*@ onchange="onLocationUpdate(@item.Id)" />
+                        @*<input type="text" id=@locVar name=@locVar @myStyle value=@location onload="onLocationUpdate(@item.Id)" onchange="onLocationUpdate(@item.Id)" onloadstart="onLocationUpdate(@item.Id)" />*@
+                        <img src="~/images/next.png" alt="I fail" id=@imgNext name=@imgNext style="width:auto; height:25px; float:left; margin-left:10px; cursor: pointer;" onclick="LocationChange(@item.Id)" hidden />
+                    </td>
+                    <td colspan="2" style="border-top: none; vertical-align:middle;border-bottom: 1px solid #000000">
+                        @{ 
+                            var qtyVal = 0;
+                            var IdName = "Qty" + item.Id;
+
+                            int dict;
+                            if (!Model.Qty.TryGetValue(item.Id, out dict))
+                            {
+                                dict = 0;
+                            }
+                        }
+                        <b style="float: left; margin-left: 65px;">Quantity</b>
+                        <br/><br/>
+                        <img src="~/images/arrow-left-double.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-right:5px;" onclick="QtyChange(@item.Id, -10)"/>
+                        <img src="~/images/arrow-left-single.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@item.Id, -1)"/>
+                            
+                        <input type="text" id=@IdName name=@IdName style="float: left; max-width: 75px; width:auto; text-align:center" value=@qtyVal readonly/>
+                        
+                        <img src="~/images/arrow-right-single.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@item.Id, 1)" />
+                        <img src="~/images/arrow-right-double.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px;" onclick="QtyChange(@item.Id, 10)" />
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        @*<div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>*@
+
+    </div>
+@*}*@
+
+<br/><br/>

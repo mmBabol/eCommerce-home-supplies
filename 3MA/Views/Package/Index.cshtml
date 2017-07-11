@@ -1,0 +1,42 @@
+﻿@model IEnumerable<_3MA.Controllers.PackageWithProducts>
+
+@{
+    ViewBag.Title = "Index";
+
+    
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr style="height:200px">
+        <td valign="middle">
+            @*<div style="width:200px;height:200px;border:1px solid #000;background:#4cff00">   this will be an image</div>*@
+            @*<img src=@item.ImgURL style="width:auto; height:300px; border-radius: 5px;" />*@
+            <img src="@Html.DisplayFor(ImgURL => item.ImgURL)" style="width:auto; height:300px; border-radius: 5px;" />
+        </td>
+        <td style="height:200px; vertical-align:central;">
+            @Html.DisplayFor(modelItem => item.name)
+        </td>
+        <td valign="middle">
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary" }) 
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-primary" })
+        </td>
+    </tr>
+}
+
+</table>

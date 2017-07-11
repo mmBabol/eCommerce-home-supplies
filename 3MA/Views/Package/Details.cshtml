@@ -1,0 +1,92 @@
+﻿@model _3MA.Controllers.PackageWithProducts
+
+@{
+    ViewBag.Title = "Details";
+    var PackageName = Model.name;    
+}
+
+<h2>Details for <i><span style="font-family:'Times New Roman', Times, serif; color:darkblue">@PackageName</span></i></h2>
+
+<div>
+    <h4>Package</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+    </dl>
+
+    <br/>
+
+    @* List of all the products in the package *@
+    @if (Model.Products.Count() != 0)
+    {
+        <p><b>Products in this package</b></p>
+        <table class="table-hover padding">
+            <tr>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Sub category
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Finish
+                </th>
+                <th>
+                    Collection
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Price
+                </th>
+            </tr>
+            @foreach(var item in Model.Products)
+            {
+                <tr>
+                    <td>
+                        @item.MainCategory
+                    </td>
+                    <td>
+                        @item.SubCategory
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Finish
+                    </td>
+                    <td>
+                        @item.Collection
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.Price
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>There are currently no products in this package. To add products into the table, click @Html.ActionLink("Here","Edit", new { id = Model.Id })</p>
+    }
+
+
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

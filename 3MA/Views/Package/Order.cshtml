@@ -1,0 +1,76 @@
+﻿@model IEnumerable<_3MA.Controllers.PackageWithProducts>
+@using _3MA.Extensions
+
+@{
+    ViewBag.Title = "Order";
+}
+
+<h2>Order</h2>
+
+@* Current customer information *@
+@if (User.IsInRole("Customer"))
+{
+    <h3>Customer information</h3>
+    <dl class="dl-horizontal">
+        <dt>
+            Suite
+        </dt>
+
+        <dd>
+            @User.Identity.GetCustomerSuite()
+        </dd>
+
+        <dt>
+            Floor plan
+        </dt>
+        <dd>
+            @User.Identity.GetCustomerFloorPlan()
+        </dd>
+
+        <dt>
+            Name
+        </dt>
+        <dd>
+            @User.Identity.Name
+        </dd>
+
+    </dl>
+}
+
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.name)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td valign="middle">
+                @*<label><input type="radio" name="RBPackage" value=""</label>*@
+                <div style="width:200px;height:200px;border:1px solid #000;background:#4cff00">this will be an image</div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<div class="form-group">
+
+    <input type="checkbox" name="lightUpgrade" value="light" />
+    <input name="light" value="true" type="hidden" />
+    Light upgrade - $1000.00
+</div>
+
+
+<div class="col-md-offset-2 col-md-10">
+    <input type="submit" class="btn btn-default" value="Accept" />
+</div>
+
+@*@Html.ActionLink("Accept", "Action", "Controller", route, attribute)*@
