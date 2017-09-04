@@ -8,6 +8,7 @@ namespace _3MA.Controllers
 {
 
     // -----------------    Order    ----------------------------------
+    // Order - Order built from packages, currently obsolete
 
     public class OrderAdd
     {
@@ -37,6 +38,7 @@ namespace _3MA.Controllers
     }
 
     // -----------------    POrder    ----------------------------------
+    // POrder - Order containing products, named POrders because Orders was already used, Darren originally wanted to create orders using packages, then changed to products later on. He changes his mind often like that.
 
     public class POrderAdd
     {
@@ -45,17 +47,18 @@ namespace _3MA.Controllers
             Completed = false;
             IdProductList = new List<int>();
             AllProducts = new List<ProductBase>();
+            IdAccList = new Dictionary<int, int>();
+            AllAccessories = new List<AccessoriesBase>();
             Room = new Dictionary<int, string>();
             Qty = new Dictionary<int, int>();
             OrderPlaced = DateTime.Now;
             MoveIn = DateTime.Now;
         }
 
-        [Required]
+
         public int Suite { get; set; }
         [Display(Name = "Floor plan")]
         //, StringLength(5, ErrorMessage = "The {0} must be {2} or fewer characters.")
-        [Required]
         public string Plan { get; set; }
         public bool LightUpgrade { get; set; }
         public bool Completed { get; set; }
@@ -73,6 +76,12 @@ namespace _3MA.Controllers
         public ICollection<int> IdProductList { get; set; }
         public ICollection<ProductBase> AllProducts { get; set; }
 
+        // List of accessory ID's, 
+        // int - ID of accessory
+        // int - ID of product that accessory belongs to
+        public Dictionary<int, int> IdAccList { get; set; }
+        public ICollection<AccessoriesBase> AllAccessories { get; set; }
+
         public Dictionary<int, string> Room { get; set; }
         public Dictionary<int, int> Qty { get; set; }
         public string Street { get; set; }
@@ -80,6 +89,16 @@ namespace _3MA.Controllers
         public string Prov { get; set; }
         public string Country { get; set; }
         public string Postal { get; set; }
+
+        // Bill information
+        public string BillStreet { get; set; }
+        public string BillCity { get; set; }
+        public string BillProv { get; set; }
+        public string BillCountry { get; set; }
+        public string BillPostal { get; set; }
+
+        public string ProjectName { get; set; }
+        public int ProjectId { get; set; }
 
         public string customerID { get; set; }
     }
@@ -111,6 +130,15 @@ namespace _3MA.Controllers
                 return ((Street != null) ? Street + ", " : "" ) + ((City != null) ? City + ", " : "") + ((Name != null) ? Name : "");
             }
         }
+
+        public string getSuite
+        {
+            get
+            {
+                return ProjectName + ", suite " + Suite ;
+            }
+        }
+
         public string getAddress
         {
             get
@@ -160,6 +188,16 @@ namespace _3MA.Controllers
         public string Country { get; set; }
         public string Postal { get; set; }
 
+        // Bill information
+        public string BillStreet { get; set; }
+        public string BillCity { get; set; }
+        public string BillProv { get; set; }
+        public string BillCountry { get; set; }
+        public string BillPostal { get; set; }
+
+        public string ProjectName { get; set; }
+        public int ProjectId { get; set; }
+
         public ICollection<ProductBase> AllProducts { get; set; }
         public ICollection<int> IdProductList { get; set; }
         public ProductSearchForm Search { get; set; }
@@ -195,6 +233,16 @@ namespace _3MA.Controllers
         public string Prov { get; set; }
         public string Country { get; set; }
         public string Postal { get; set; }
+
+        // Bill information
+        public string BillStreet { get; set; }
+        public string BillCity { get; set; }
+        public string BillProv { get; set; }
+        public string BillCountry { get; set; }
+        public string BillPostal { get; set; }
+
+        public string ProjectName { get; set; }
+        public int ProjectId { get; set; }
     }
 
     public class POrderEditInfo
@@ -218,7 +266,7 @@ namespace _3MA.Controllers
         public string HPhone { get; set; }
         [Display(Name = "Mobile phone")]
         public string MPhone { get; set; }
-        [Required, Display(Name = "Move in date")]
+        [Display(Name = "Move in date")]
         [DataType(DataType.Date), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime MoveIn { get; set; }
         public ICollection<ProductBase> AllProducts { get; set; }
@@ -227,5 +275,32 @@ namespace _3MA.Controllers
         public string Prov { get; set; }
         public string Country { get; set; }
         public string Postal { get; set; }
+
+        // Bill information
+        public string BillStreet { get; set; }
+        public string BillCity { get; set; }
+        public string BillProv { get; set; }
+        public string BillCountry { get; set; }
+        public string BillPostal { get; set; }
+
+        public string ProjectName { get; set; }
+        public int ProjectId { get; set; }
+    }
+
+    public class POrderProducts
+    {
+        public POrderProducts()
+        {
+            IdProductList = new List<int>();
+            AllProducts = new List<ProductBase>();
+            Room = new Dictionary<int, string>();
+            Qty = new Dictionary<int, int>();
+        }
+
+        public ICollection<ProductBase> AllProducts { get; set; }
+        public ICollection<int> IdProductList { get; set; }
+
+        public Dictionary<int, string> Room { get; set; }
+        public Dictionary<int, int> Qty { get; set; }
     }
 }

@@ -18,66 +18,94 @@ namespace _3MA.Controllers
 
 
         // TODO - ProductsController partial views
+        [Route("Paint_product/")]
         public ActionResult Paint()
         {
             return View();
         }
 
+        [Route("Millwork_product/")]
         public ActionResult Millwork()
         {
             return View();
         }
 
-        [Route("Tiles/")]
+        [Route("Tiles_product/")]
         public ActionResult Tiles()
         {
             return PartialView("_Tiles");
         }
 
-        [Route("Flooring/")]
+        [Route("Flooring_product/")]
         public ActionResult Flooring()
         {
-            return PartialView("_Flooring", new ProductSearchForm());
+            var search = new ProductSearchForm();
+
+            search.dimX = m.getAllDimX("Flooring");
+            search.dimY = m.getAllDimY("Flooring");
+            search.dimZ = m.getAllDimZ("Flooring");
+            search.PriceCat = m.getAllPriceCat("Flooring");
+
+            return PartialView("_Flooring", search);
         }
 
+        [Route("Door_product/")]
         public ActionResult Door()
         {
             return View();
         }
 
+        [Route("Plumbing_product/")]
         public ActionResult Plumbing()
         {
             return View();
         }
 
+        [Route("Appliances_product/")]
         public ActionResult Appliances()
         {
             return View();
         }
 
-        [Route("product/sub/{cat}/{sub}")]
-        //public ActionResult ProductSearch(string main, string search)
-        public ActionResult ProductSub(string cat, string sub)
+        [Route("Flooring_Category/")]
+        public ActionResult Flooring_Category()
         {
-            //var c = m.ProductSearch(main, search);
-            var c = m.ProductSearch(cat, sub);
+            var search = new ProductSearchForm();
 
-            return PartialView("_ProductList", c);
+            search.dimX = m.getAllDimX("Flooring");
+            search.dimY = m.getAllDimY("Flooring");
+            search.dimZ = m.getAllDimZ("Flooring");
+            search.PriceCat = m.getAllPriceCat("Flooring");
+
+            ViewData["next"] = "all";
+
+            return View("_Flooring", search);
         }
 
-        //TODO: fix searching for product only
-        [Route("product/search/{cat}/{col}/{nam}")]
-        //public ActionResult ProductSearch(string main, string search)
-        public ActionResult ProductSearch(string cat, string col, string nam)
+        [Route("product/sub/{cat}/{sub}")]
+        public ActionResult ProductSub(string cat, string sub)
         {
-            //var category = Request.QueryString["category"];
-            //var name = Request.QueryString["name"];
 
-            var c = m.ProductSearchForm(cat, col, nam, "g", "h", "h", "A");
-            //var c = m.ProductSearch("Flooring", sub);
+            var products = m.ProductSearch(cat, sub).ToList();
+
+            return PartialView("_ProductList", products);
+        }
 
 
-            return PartialView("_ProductList", c);
+        // ProductSearch - Search for specific products.
+        [Route("product/search/{cat}/{col}/{nam}/{x}/{y}/{z}/{price}")]
+        public ActionResult ProductSearch(string cat, string col, string nam, string x, string y, string z, string price)
+        {
+            List<string> filterCat = new List<string>();
+            var products = m.ProductSearchForm(cat, col, nam, x, y, z, price, filterCat).ToList();
+
+            if (products.Count == 0 || products == null)
+            {
+                //return Content("<h3>No results found.</h3>", "text/html");
+                return PartialView("NotFound");
+            }
+
+            return PartialView("_ProductList", products);
         }
 
         // GET: Product/Details/5

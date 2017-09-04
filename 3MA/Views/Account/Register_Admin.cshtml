@@ -1,0 +1,180 @@
+﻿@model _3MA.Models.RegisterAdminForm
+@{
+    ViewBag.Title = "Register";
+}
+
+<script src="~/Scripts/core.js"></script>
+
+@using (Html.BeginForm("Register_Admin", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <h2 style="text-align:center;">Admin</h2>
+
+    <h4>Create new administrative account.</h4>
+    <hr />
+
+    @*<div class="form-group">
+        @{
+            foreach (var item in Model.RoleList)
+            {
+                var labelName = "label-" + item;
+                <label class="col-lg-4 col-sm-4 roles" id="@labelName" style="height: 225px; border-left:solid 1px #808080; border-right:solid 1px #808080;" onclick="updateRoleBackground(@labelName)">
+                    
+
+                    @if (@item.Text == "Customer")
+                    {
+                       <img src="~/images/customer.png" class="img-center" style="width: 150px; height: auto; border: none; align-content:center;"  onclick="updateRoleBackground(@labelName)" />
+                    }
+                    else if (@item.Text == "Client")
+                    {
+                        <img src="~/images/client.png" class="img-center" style="width: 150px; height: auto; border: none;"  onclick="updateRoleBackground(@labelName)" />
+                    }
+                    else
+                    {
+                        <img src="~/images/admin.png" class="img-center" style="width: 150px; height: auto; border: none;"  onclick="updateRoleBackground(@labelName)" />
+                    }
+                    <br/>
+                    <input type="radio" name="Roles" value="@item.Text" /><p style="text-align:center;">@item.Text</p>
+                </label>
+            }
+        }
+    </div>*@
+
+    <br/>
+
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @autofocus = "autofocus" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+        </div>
+    </div>
+
+        <!-- new block below -->
+    <div class="form-group">
+        @Html.LabelFor(m => m.GivenName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.GivenName, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Surname, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Surname, new { @class = "form-control" })
+        </div>
+    </div>
+
+    @*<div class="form-group">
+        @Html.LabelFor(m => m.Suite, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Suite, new { @class = "form-control" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(m => m.Street, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Street, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Prov, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Prov, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Country, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Country, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Postal, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Postal, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Plan, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Plan, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.HPhone, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.HPhone, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.MPhone, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.MPhone, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MoveIn, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MoveIn, new { htmlAttributes = new { @class = "form-control", @Value = "01/01/20" } })
+        </div>
+    </div>*@
+    
+
+
+    <!-- Terms and conditions-->
+
+@*<input type="checkbox" name="cbTerms" id="idTerms" onclick="agreeTerms()"/><p>I agree to the terms and conditions and so on</p>*@
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="btnSubmit" type="submit" class="btn btn-default" value="Register Account"/>
+        </div>
+    </div>
+}
+
+@*<script>
+    function agreeTerms() {
+        var terms = document.getElementById('idTerms').checked;
+
+        if (terms) {
+            document.getElementById('btnSubmit').disabled = false;
+        }
+        else {
+            document.getElementById('btnSubmit').disabled = true;
+        }
+    }
+</script>*@
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

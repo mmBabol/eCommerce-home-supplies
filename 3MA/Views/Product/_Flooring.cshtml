@@ -1,13 +1,18 @@
 ﻿@model _3MA.Controllers.ProductSearchForm
-
 <hr/>
 
 <script src="~/Scripts/partials.js"></script>
+<script src="~/Scripts/core.js"></script>
 
-@{ 
+@{
     string[] types = { "All", "Engineered Hardwood", "Laminate", "Vinyl",
         "Adhesive", "Underlay", "Cork", "Solid Hardwood", "Other"};
-    }
+
+        bool all = false;
+        var next = ViewData["next"] as string;
+        if (next != null && next == "all") { all = true; }
+
+}
 
 <h4>Select a Sub Category</h4>
 <br />
@@ -15,118 +20,136 @@
 <dev class="tainer" onclick="onClickSub('Flooring', 'All' )">
     @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[0]</p>
+        <p class="ext myFont">@types[0]</p>
 @*    </a>*@
 </dev>
 
 <dev class="tainer" onclick="onClickSub('Flooring', 'Engineered Hardwood')">
-    @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[1]</p>
-    @*</a>*@
+        <p class="ext myFont">@types[1]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSub('Flooring', 'Laminate')">
-    @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[2]</p>
-    @*</a>*@
+        <p class="ext myFont">@types[2]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSub('Flooring', 'Vinyl')">
-    @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[3]</p>
-@*    </a>*@
+        <p class="ext myFont">@types[3]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSub('Flooring', 'Adhesive')">
-    @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[4]</p>
-    @*</a>*@
+        <p class="ext myFont">@types[4]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSub('Flooring', 'Underlay')">
-    @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[5]</p>
-@*    </a>*@
+        <p class="ext myFont">@types[5]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSub('Flooring', 'Cork')">
-    @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[6]</p>
-    @*</a>*@
+        <p class="ext myFont">@types[6]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSub('Flooring', 'Solid Hardwoord')">
-    @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[7]</p>
-    @*</a>*@
+        <p class="ext myFont">@types[7]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSub('Flooring', 'Other')">
-    @*<a href="@Url.Action("Tiles", "Product", null)">*@
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[8]</p>
-    @*</a>*@
+        <p class="ext myFont">@types[8]</p>
 </dev>
 
 <br/><br />
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<div class="container">
+    <div class="col-sm-10 col-md-6">
+        <br /><br />
+        <label class="search-label"><b>Name of product</b></label>
+        <input type="text" id="searchName" name="searchName" style="width: 200px;" />
 
-    <div class="form-horizontal">
+        <br /><br />
+        <label class="search-label"><b>Colour of prouct</b></label>
+        <input type="text" id="searchColour" name="searchColour" style="width: 200px;" />
 
-        @* Colour *@
-        @Html.ValidationSummary(true,"", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.colour, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="cold=md-10">
-                @Html.EditorFor(model => model.colour, new { htmlAttributes = new { @class = "form-control", @id = "filterColour", @autofocus = "autofocus" } })
-                @Html.ValidationMessageFor(model => model.colour, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <br /><br />
 
-        @* Species *@
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.species, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="cold=md-10">
-                @Html.EditorFor(model => model.species, new { htmlAttributes = new { @class = "form-control", @id = "filterName", @autofocus = "autofocus" } })
-                @Html.ValidationMessageFor(model => model.species, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @* Dimensions *@
-        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.colour, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="cold=md-10">
-                @Html.EditorFor(model => model.colour, new { htmlAttributes = new { @class = "form-control", @id = "filterColour", @autofocus = "autofocus" } })
-                @Html.ValidationMessageFor(model => model.colour, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
-
-
-        @* 
-        ATTENTION - to add more search fields into flooring, add all necessary forms up above, 
-            then pass all the values to the filterProduct JS function. Pass the arguments along with '/product/search/'.
-            In the controller, add the extra argument inside the routing attribute. Make sure that the name is the exact
-            same as the argument.
-        *@
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Search" class="btn btn-default" onclick="filterProduct('product', 'Flooring', filterColour.value, filterName.value)" />
-            </div>
-        </div>
-
+        <label class="search-label"><b>Price Category</b></label>
+        <select name="PriceList" id="PriceList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var p in Model.PriceCat)
+            {
+                <option>@p</option>
+            }
+        </select>
     </div>
+
+    <div class="col-sm-10 col-md-6">
+        <br /><br />
+        <label class="search-label"><b>Dimension X</b></label>
+        <select name="dimXList" id="dimXList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var x in Model.dimX)
+            {
+                <option>@x</option>
+            }
+        </select>
+
+        <br /><br />
+        <label class="search-label"><b>Dimension Y</b></label>
+        <select name="dimYList" id="dimYList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var y in Model.dimY)
+            {
+                <option>@y</option>
+            }
+        </select>
+
+        <br /><br />
+        <label class="search-label"><b>Dimension Z</b></label>
+        <select name="dimZList" id="dimZList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var z in Model.dimZ)
+            {
+                <option>@z</option>
+            }
+        </select>
+
+        <br /><br />
+    </div>
+    @*ATTENTION - to add more search fields into flooring, add all necessary forms up above,
+        then pass all the values to the filterProduct JS function. Pass the arguments along with '/product/search/'.
+        In the controller, add the extra argument inside the routing attribute. Make sure that the name is the exact
+        same as the argument.*@
+    <div class="col-sm-10 col-md-8">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" value="Search" class="btn btn-primary" onclick="onFilterProduct('product', 'Flooring')" />
+        </div>
+    </div>
+
+</div>
+
+@if (all)
+{
+    @*@:onClickSub('Flooring', 'All');*@
+
+    <script type="text/javascript">
+        window.onload = function () {
+            onClickSub('Flooring', 'All');
+        };
+        //$(function () {
+        //    onClickSub('Flooring', 'All');
+        //})
+    </script>
+
+    //Html.Action("Index", "Home");
+    //Html.Action("ProductSub", "Product", new { cat = "Flooring", sub = "All" });
+    //Html.RenderPartial("_ProductList");
 }
+
 
 <div id="productList"></div>

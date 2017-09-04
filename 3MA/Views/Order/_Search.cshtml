@@ -1,0 +1,23 @@
+﻿@model IEnumerable<_3MA.Controllers.ProductBase>
+
+<script src="~/Scripts/core.js"></script>
+
+@foreach(var prod in Model)
+{
+    <div class="product_container" >
+
+        <img src=@prod.Image alt="Image missing" style="width:130px; height:130px; overflow:hidden;" />
+
+        <p style="padding-top: 10px; font-size: 16px;">@prod.MFG_SKU</p>
+
+        <div style="height: 60px; width: 100%;">
+            <p style="font-size: 16px; text-align: center;"><b>@prod.Name</b></p>
+        </div>
+
+        <p style="font-size: 14px;">@prod.getDim</p>
+
+
+        <p style="padding-top: 10px; font-size: 14px;">$ @prod.Price.ToString("0.00")</p>
+
+    </div>
+}

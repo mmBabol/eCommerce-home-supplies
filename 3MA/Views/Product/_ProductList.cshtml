@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<_3MA.Controllers.ProductBase>
 
-<p>
+@*<p>
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
-</p>
+</p>*@
+
+<br/>
 
 <table class="text-center center-vertical table-responsive">
     <tr>
@@ -23,13 +25,13 @@
                 @if (item.Image == "")
                 {
                     <div style="height:200px; text-align:center; vertical-align:bottom;">
-                        <img src="~/images/warning.png" alt="Can't locate image'" style="width:auto; height:auto; border-radius: 5px; transform:translateY(50%);" />
+                        <img src="~/images/warning.png" alt="Can't locate image'" style="width:200px; height:200px; border-radius: 5px; transform:translateY(50%);" />
                         <p style="color:darksalmon;transform:translateY(80%);">Error - broken image link. Please contact the admin for help.</p>
                     </div>
                 }
                 else
                 {
-                    <img src=@item.Image class="img-responsive" alt="I fail" style="width:auto; height:auto; min-height:60px; max-height:180px; border-radius: 5px; margin-top: 20px; margin-bottom: 20px;" />
+                    <img src=@item.Image class="img-responsive" alt="I fail" style="width:200px; height:200px; min-height:60px; max-height:180px; border-radius: 5px; margin-top: 20px; margin-bottom: 20px; overflow: hidden" />
                 }
             </td>
             

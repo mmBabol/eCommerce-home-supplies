@@ -1,0 +1,79 @@
+﻿@model _3MA.Controllers.ProjectAdd
+@{
+    ViewBag.Title = "Create project";
+    var name = ViewData["Name"] as string;
+    var id = ViewData["Id"] as string;
+}
+
+<h2>Create project for @name</h2>
+
+@using (Html.BeginForm("Create_Project", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h4>Create a new project.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+   
+    
+    
+     <div class="form-group">
+        @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @autofocus = "autofocus" })
+        </div>
+    </div>
+
+    <div>
+        @Html.TextBoxFor(m => m.Developer, new { @class = "form-control", @Value = @name, @type="hidden" })
+    </div>
+
+    <div>
+        @Html.TextBoxFor(m => m.ClientID, new { @class = "form-control", @Value = @id, @type = "hidden" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Street, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Street, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Province, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Province, new { @class = "form-control" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(m => m.Country, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Country, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Postal, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Postal, new { @class = "form-control" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="btnSubmit" type="submit" class="btn btn-default" value="Create Project"/>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -10,22 +10,22 @@
         "Adhesive", "Underlay", "Cork", "Solid Hardwood", "Other"};
     }
 
-<h4>Select a Sub Category</h4>
+<h4 class="myFont" >Select a Sub Category</h4>
 <br />
 
 <dev class="tainer" onclick="onClickSubOrder('Flooring', 'All')">
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[0]</p>
+        <p class="ext myFont">@types[0]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSubOrder('Flooring', 'Engineered Hardwood')">
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[1]</p>
+        <p class="ext myFont">@types[1]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSubOrder('Flooring', 'Laminate')">
         <img src="~/images/ico_flooring.jpg" class="ext-ico" />
-        <p class="ext">@types[2]</p>
+        <p class="ext myFont">@types[2]</p>
 </dev>
 
 <dev class="tainer" onclick="onClickSubOrder('Flooring', 'Vinyl')">
@@ -58,93 +58,73 @@
         <p class="ext">@types[8]</p>
 </dev>
 
-<br/><br />
+<br/>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<div class="container">
+    <div class="col-sm-10 col-md-6">
+        <br /><br />
+        <label class="search-label"><b>Name of product</b></label>
+        <input type="text" id="searchName" name="searchName" style="width: 200px;" />
 
-    <div class="form-horizontal">
+        <br /><br />
+        <label class="search-label"><b>Colour of prouct</b></label>
+        <input type="text" id="searchColour" name="searchColour" style="width: 200px;" />
 
-        @* TODO: fix the formatting *@
+        <br /><br />
 
-        @*Species*@
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.species, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="cold=md-10">
-                @Html.EditorFor(model => model.species, new { htmlAttributes = new { @class = "form-control", @id = "filterName", @autofocus = "autofocus" } })
-                @Html.ValidationMessageFor(model => model.species, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-          @*Colour*@  
-        @Html.ValidationSummary(true,"", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.colour, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="cold=md-10">
-                @Html.EditorFor(model => model.colour, new { htmlAttributes = new { @class = "form-control", @id = "filterColour", @autofocus = "autofocus" } })
-                @Html.ValidationMessageFor(model => model.colour, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        
-        <br/><br />
-            <b>Dimension X</b>
-            <select name="dimXList" id="dimXList" style="width: 150px; height: 30px;">
-                <option>-</option>
-                @foreach (var x in Model.dimX)
+        <label class="search-label"><b>Price Category</b></label>
+        <select name="PriceList" id="PriceList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var p in Model.PriceCat)
             {
-                    <option>@x</option>
-                }
-            </select>
+                <option>@p</option>
+            }
+        </select>
+    </div>
 
-            <br /><br />
-            <b>Dimension Y</b>
-            <select name="dimYList" id="dimYList" style="width: 150px; height: 30px;">
-                <option>-</option>
-                @foreach (var y in Model.dimY)
-                {
-                    <option>@y</option>
-                }
-            </select>
+    <div class="col-sm-10 col-md-6">
+        <br /><br />
+        <label class="search-label"><b>Dimension X</b></label>
+        <select name="dimXList" id="dimXList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var x in Model.dimX)
+            {
+                <option>@x</option>
+            }
+        </select>
 
-            <br /><br />
-            <b>Dimension Z</b>
-            <select name="dimZList" id="dimZList" style="width: 150px; height: 30px;">
-                <option>-</option>
-                @foreach (var z in Model.dimZ)
-                {
-                    <option>@z</option>
-                }
-            </select>
-            <br /><br />
+        <br /><br />
+        <label class="search-label"><b>Dimension Y</b></label>
+        <select name="dimYList" id="dimYList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var y in Model.dimY)
+            {
+                <option>@y</option>
+            }
+        </select>
 
-            <b>Price Category</b>
-            <select name="PriceList" id="PriceList" style="width: 150px; height: 30px;">
-                <option>-</option>
-                @foreach (var p in Model.PriceCat)
-                {
-                    <option>@p</option>
-                }
-            </select>
+        <br /><br />
+        <label class="search-label"><b>Dimension Z</b></label>
+        <select name="dimZList" id="dimZList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var z in Model.dimZ)
+            {
+                <option>@z</option>
+            }
+        </select>
 
-            <br /><br />
-
-            @*ATTENTION - to add more search fields into flooring, add all necessary forms up above,
+        <br /><br />
+    </div>
+        @*ATTENTION - to add more search fields into flooring, add all necessary forms up above,
             then pass all the values to the filterProduct JS function. Pass the arguments along with '/product/search/'.
             In the controller, add the extra argument inside the routing attribute. Make sure that the name is the exact
             same as the argument.*@
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="button" value="Search" class="btn btn-default" onclick="onFilterProduct('order', 'Flooring', filterColour.value, filterName.value)" />
-                </div>
-            </div>
-
-        @*"filterProduct('order', 'Flooring', filterColour.value, filterName.value)"*@
-
-        @*<label style="border: 1px solid #0094ff; cursor:pointer; border-radius: 2px; margin:10px; padding: 7px" onclick="filterProduct('order', 'Flooring', filterColour.value, filterName.value)">Press me!</label>*@
-
+    <div class="col-sm-10 col-md-8">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" value="Search" class="btn btn-primary" onclick="onFilterProduct('order', 'Flooring')" />
         </div>
-}
+    </div>
+
+</div>
 
 <div id="productList"></div>

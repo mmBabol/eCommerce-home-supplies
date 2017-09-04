@@ -166,7 +166,9 @@
     @Html.ActionLink("Back to List", "Products_Order", null, new { @class = "btn btn-success" })
     @if (cheddar)
     {
-        ViewBag.suite = Model.Suite;
-        @Html.ActionLink("Confirm", "Order_Accept", new { suite = Model.Suite }, new { @class = "btn btn-success" })
+        ViewBag.suite = Model.Id;
+        @Html.ActionLink("Confirm", "Order_Accept", new { Id = Model.Id }, new { @class = "btn btn-success" })
+        @*ViewBag.suite = Model.Suite;
+        @Html.ActionLink("Confirm", "Order_Accept", new { suite = Model.Suite }, new { @class = "btn btn-success" })*@
     }
 </p>

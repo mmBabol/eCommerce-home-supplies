@@ -25,6 +25,19 @@ namespace _3MA.Controllers
             }
         }
 
+        [Route("LoadNewData/")]
+        public ActionResult LoadNew()
+        {
+            if (m.NewData())
+            {
+                return Content("New data has loaded!");
+            }
+            else
+            {
+                return Content("Error loading data");
+            }
+        }
+
         public ActionResult Remove()
         {
             if (m.RemoveData())

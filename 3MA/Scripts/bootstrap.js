@@ -2380,14 +2380,14 @@ if (typeof jQuery === 'undefined') {
 
 // Resopnsive-Slider-JavaScript
 
-$(function () {
-    $("#slider").responsiveSlides({
-        auto: true,
-        nav: true,
-        speed: 2000,
-        namespace: "callbacks",
-        pager: true,
-    });
-});
+//$(function () {
+//    $("#slider").responsiveSlides({
+//        auto: true,
+//        nav: true,
+//        speed: 2000,
+//        namespace: "callbacks",
+//        pager: true,
+//    });
+//});
 //Resopnsive-Slider-JavaScript
 

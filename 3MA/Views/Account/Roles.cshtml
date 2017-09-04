@@ -1,0 +1,49 @@
+﻿@model _3MA.Models.myRoles
+@{
+    ViewBag.Title = "Register";
+}
+
+<script src="~/Scripts/core.js"></script>
+
+
+@using (Html.BeginForm("Register_Admin", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h4>Select which account type to create</h4>
+    <hr />
+
+    <div class="form-group">
+        @{
+            foreach (var item in Model.RoleList)
+            {
+                var labelName = "label-" + item;
+                //border - left:solid 1px #808080; border-right:solid 1px #808080;
+                <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 roles" id="@labelName" style="height: 225px;" >
+
+
+                    @if (@item.Text == "Customer")
+                    {
+                        <img src="~/images/customer.png" class="img-center img-roles" onclick="onClickRole('customer')" />
+                    }
+                    else if (@item.Text == "Client")
+                    {
+                        <img src="~/images/client.png" class="img-center img-roles" onclick="onClickRole('client')"/>
+                    }
+                    else
+                    {
+                        <img src="~/images/admin.png" class="img-center img-roles" onclick="onClickRole('admin')"/>
+                    }
+                    <br />
+                    <input type="radio" name="Roles" value="@item.Text" /><p style="text-align:center;">@item.Text</p>
+                </label>
+            }
+        }
+    </div>
+}
+    <br />
+
+    <div id="partialRegister"></div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

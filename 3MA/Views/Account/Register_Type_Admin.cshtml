@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Account type";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<p>Are you registering as a single dwelling </p>
+
+<div class="col-lg-6 col-sm-6">
+    <img src="~/images/single.png" class="img-center img-roles" onclick="onClickTypeAdmin('single')" />
+</div>
+
+<div class="col-lg-6 col-sm-6">
+    <img src="~/images/project.png" class="img-center img-roles" onclick="onClickTypeAdmin('project')" />
+</div>
+
+<div id="partialUserType"></div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

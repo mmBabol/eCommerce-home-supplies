@@ -21,6 +21,19 @@ namespace _3MA.Controllers
         [Required]
         public string email { get; set; }
         public IEnumerable<string> Roles { get; set; }
+        public string allRoles
+        {
+            get
+            {
+                string all = "";
+                foreach(var i in Roles)
+                {
+                    all += i + ",";
+                }
+
+                return all.TrimEnd(',');
+            }
+        }
     }
 
     public class ApplicationUserAdd

@@ -7,6 +7,8 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
+    <link rel="icon" href="~/images/favicon.ico">
+
     @{
         var userAccount = new _3MA.Controllers.RequestUser(User as System.Security.Claims.ClaimsPrincipal);
     }
@@ -87,7 +89,6 @@
             document.location.href = theUrl;
         }
 
-
         //$(function () {
         //    $("#datepicker").datepicker();
         //});
@@ -96,31 +97,46 @@
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top" @*style="background-color: #fff;"*@>
         <div class="container">
-            <div class="navbar-header">
+            <div >
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("Main", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+                @*<a href="@Html.ActionLink( "Index", "Home")">
+                    <img src="~/images/logo.png" style="width: auto; height: 30px;"/>
+                </a>*@
+
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    @*<li>@Html.ActionLink("Home", "Index", "Home" )</li>*@
                     <li>@Html.ActionLink("Products", "Index", "Product")</li>
-                    <li>@Html.ActionLink("Packages", "Index", "Package")</li>
+                    @*<li>@Html.ActionLink("Packages", "Index", "Package")</li>*@
                     @if (Request.IsAuthenticated)
                     {
                         //if (User.IsInRole("Admin"))
                         if (userAccount.IsAdmin)
                         {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    Accounts <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
 
-                            <li>@Html.ActionLink("Account list", "Index", "AccountManager")</li>
-                            <li>@Html.ActionLink("Find account", "UserFinder", "AccountManager")</li>
+
+                                    <li>@Html.ActionLink("Create", "Roles", "Account")</li>
+                                    <li>@Html.ActionLink("Account list", "Index", "AccountManager")</li>
+                                    @*<li>@Html.ActionLink("Find account", "UserFinder", "AccountManager")</li>*@
+                                </ul>
+                            </li>
+                            <li>@Html.ActionLink("Projects", "Index", "Project")</li>
                         }
-                        @*<li>@Html.ActionLink("Order", "Order", "Package")</li>*@
+                                    @*<li>@Html.ActionLink("Order", "Order", "Package")</li>*@
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -133,7 +149,7 @@
                                 {
                                     <li>@Html.ActionLink("Products", "Products_Order", "Order")</li>
                                 }
-                                else if(User.IsInRole("Admin") || User.IsInRole("Client"))
+                                else if (User.IsInRole("Admin") || User.IsInRole("Client"))
                                 {
                                     <li>@Html.ActionLink("Products", "getEndUser", "Order")</li>
                                     <li>@Html.ActionLink("All orders", "Index", "Order")</li>
@@ -142,10 +158,12 @@
                         </li>
                         if (User.IsInRole("Customer"))
                         {
-                            @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })*@
+                        @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })*@
                             <li>@Html.ActionLink("Edit account", "Edit", "Order")</li>
                         }
+                        @*<li>@Html.ActionLink("Create", "Roles", "Account")</li>*@
                     }
+                    <li>@Html.ActionLink("V2.0", "Home", "Order")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

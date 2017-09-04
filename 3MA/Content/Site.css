@@ -1,51 +1,562 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿/* Stolen from bootstrap & modified */
+.navbar-inverse {
+  background-color: rgba(250,250,255,0.85);               /* Menu */
+  border-color: #080808;
+}
+.navbar-inverse .navbar-brand {
+  color: #333;                       /*Menu title colour*/
+  font-weight: bold;
+  font-family:Lucida Sans Unicode;
+}
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus {
+  color: #55d;                          /*Menu title hover colour*/
+  background-color: transparent;
+}
+.navbar-inverse .navbar-text {
+  color: #9d9d9d;
+}
+.navbar-inverse .navbar-nav > li > a {
+  color: #333;                       /*Title headings colour*/
+  font-weight: bold;
+  font-family: Lucida Sans Unicode;
+}
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+  color: #55d;                          /*Title headings hover colour*/
+  background-color: transparent;
+}
+
+
+
+
+/* Custom CSS */
+
+/*     font-family: Avenir, 'Lucida Grande', sans-serif; */
+body {
+	padding-top: 50px;
+	padding-bottom: 20px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
+.myFont{
+	font-family: Arial, Avenir, 'Lucida Grande', sans-serif;
+}
+
+
+/* Override the default bootstrap behavior where horizontal description lists
+   will truncate terms that are too long to fit in the left column
 */
 .dl-horizontal dt {
-    white-space: normal;
+	white-space: normal;
+
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
-    max-width: 280px;
+	max-width: 280px;
+}
+
+.product_container {
+	display: inline-block;
+	width: 200px;
+	height: 300px;
+	max-width: 200px;
+	max-height: 300px;
+	border: solid 1px #000000;
+	border-radius: 4px;
+	cursor: pointer;
+	background-color: #efefef;
+	margin: 5px;
+}
+
+.product_container > img {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	padding-top: 20px;
+}
+
+.product_container > p {
+	width: 100%;
+	text-align: center;
 }
 
 .box {
-    background-color: #b8c8ff;
-    border: 2px ridge black;
-    border-radius: 5px;
-    padding: 15px;
-} 
+	/*background-color: #b8c8ff;*/
+	background-image: url("../images/retina_wood.png");
+	background-repeat: repeat;
+	background-attachment:fixed;
+	border: 1px ridge #663300;
+	border-radius: 5px;
+	padding: 15px;
+	font-family:Lucida Sans Unicode;
+}
 
-.zinger { 
-    font-size: 18px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+.zinger {
+	font-size: 18px;
+	font-family: 'Lucida Sans Unicode', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 
 .selected{
-    background-color: orangered;
-    border-top: 1px solid #000000; 
+	background-color: orangered;
+	border-top: 1px solid #000000;
 }
 
 .unselected{
-    background-color: #ffffff;
-    border-top: 1px solid #000000; 
+	background-color: #ffffff;
+	border-top: 1px solid #000000;
 }
 
 .selected-bottom{
-    background-color: greenyellow;
+	background-color: greenyellow;
 }
+
+/*   *****   Custom CSS   *****   */
+
+.tainer{
+	cursor:pointer;
+	height: 150px;
+	width: 150px;
+	position: relative;
+	margin: 8px;
+}
+
+.tainer img {
+	border-radius: 5px;
+}
+
+.section{
+	width: 100%;
+	overflow:hidden;
+	height: auto;
+	padding-bottom: 50px;
+	/* Center div horizontally */
+	margin:0px auto;
+}
+
+.contain-category{
+	cursor: pointer;
+	height: 250px;
+	width: 250px;
+	position: relative;
+	margin: 10px;
+}
+
+.contain-image {
+	width: inherit;
+	height: inherit;
+	object-fit: cover;
+	padding-bottom: 20px;
+	border-radius: 2px;
+}
+
+.contain-text{
+	position: absolute;
+	color: black;
+	background-color: rgba(140, 140, 140, 0.5);
+	font-size: 24px;
+	width: 100%;
+	text-align:center;
+	bottom: 25px;
+	left: 0;
+	font-family: Arial, Avenir, 'Lucida Grande', sans-serif;
+}
+
+.container-box{
+	border: solid 3px #606060;
+	border-radius: 10px;
+	padding: 20px;
+	margin-top: 20px;
+	width: 500px;
+	/*display:inline-block;*/
+}
+
+.img-roles{
+	width: 150px;
+	height: auto;
+	border: none;
+	align-content:center;
+	cursor: pointer;
+}
+
+@media(max-width: 720px){
+	.container-box{
+		width: 250px;
+	}
+
+	.img-roles{
+		width: 100px;
+		background-color: pink;
+	}
+}
+
+@media(max-width: 480px ){
+	.container-box{
+		width: 480px;
+	}
+
+	.img-roles{
+		width: 75px;
+		background-color: lime;
+	}
+}
+
+
+
+.ext{
+	position: absolute;
+	color: black;
+	background-color: rgba(140, 140, 140, 0.5);
+	font-size: 16px;
+	width: 97%;
+	text-align:center;
+	bottom: -55px;
+	left: 0;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.ext-ico {
+	width: 100px;
+	height: 100px;
+	border: solid 1px black;
+	border-radius: 5px;
+}
+
+label > input {                 /* HIDE RADIO */
+	visibility: hidden;         /* makes input non-clickable */
+	position: absolute;         /* Remove input from document flow */
+}
+
+label > input + img{            /* IMAGE STYLES */
+	cursor: pointer;
+	border: 2px solid #000;
+}
+
+label > input:checked + img{    /* IMAGE STYLE (RADIO CHECKED) */
+	border: 5px solid #fff200;
+}
+
+.roles {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	cursor: pointer;
+}
+
+.img-center{
+	display: block;
+	margin: 0 auto;
+}
+
+.table-center{
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 20px;
+}
+
+.ico {
+	margin: 10px;
+	width:150px;
+	height:150px;
+	border: solid 1px black;
+	border-radius: 5px;
+}
+
+.img-border{
+	cursor: pointer;
+	border: 1px solid #325cd1;
+	border-radius: 2px;
+}
+
+.img-border-black{
+	cursor: pointer;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+.POnavbar {
+	overflow: hidden;
+	background-color: #432;
+	position: fixed;
+	top: 0;
+	width:auto 90%;
+}
+
+.POnavbar a {
+	float: left;
+	display: block;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+}
+
+#floating-box{
+	border: solid 3px #337ab7;
+	padding: 1em;
+	background: #fff;
+	position: fixed;
+	top: 0;
+	width: 80%;
+	margin-top: 45px;
+	box-shadow: 2px 2px 5px #000;
+	border-radius: 0 0 25px 25px;
+	font-family: Courier, monospace;
+	-webkit-transition: border-color .5s linear;
+}
+
+.spreadMenu > a {
+	display: inline-block;
+	*display: inline; /* For IE7 */
+	zoom: 1; /* Trigger hasLayout */
+	width: 11%;
+	text-align: center;
+}
+
+a.anchor {
+  padding-top: 60px;
+  margin-top: -60px;
+  display: inline-block; /* required for webkit browsers */
+}
+
+.lookLikeButton {
+	display: block;
+	width: 115px;
+	height: 40px;
+	background: #4E9CAF;
+	padding: 10px;
+	text-align: center;
+	border-radius: 5px;
+	color: white;
+	font-weight: bold;
+}
+
+* {box-sizing:border-box}
+
+/*body {font-family: Verdana,sans-serif;margin:0}*/
+
+.mySlides {display:none}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+.slideshow-image{
+	width: 100%;
+	border: solid 1px #fff;
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 32px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Slideshow header */
+.img-header {
+	color: black;
+	font-size: 32px;
+	position: absolute;
+	bottom: 30%;
+	width: 100%;
+	text-align: center;
+	background-color: rgba(255, 250, 250, 0.5);
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+.ico-text{
+	position: absolute;
+	bottom: 10px;
+	left: 0;
+	width: 100%;
+}
+
+.zipp{
+	position: relative;
+	width: 100%;
+}
+
+.search-label{
+	width: 200px;
+	text-align:right;
+	padding-right: 30px;
+	font-family: Avenir, 'Lucida Grande', sans-serif;
+	/*font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;*/
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor:pointer;
+  height: 13px;
+  width: 13px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
+}
+
+/* Bootstrap FADE class is commented out on line 3467 */
+/* Fading animation */
+.fade-slide {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+@-webkit-keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .prev, .next,.text {font-size: 11px}
+}
+a.flooring {
+	background: url(../Images/image.gif) no-repeat top left;
+	 display: block;
+	 width: 150px;
+	 height: 150px;
+	 text-indent: -9999px; /* hides the link text */
+}
+
+.home_item_box {
+	display: inline-block;
+	position: relative;
+	float: left;
+	text-align:center;
+	height: auto;
+	width: 20%;
+	font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+	color: #fff;
+	font-weight: bold;
+}
+
+.home_item_box p {
+	margin-top: 10px;
+}
+
+.home_item_box h1 {
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+div.scrollmenu {
+	background-color: #fff;
+	overflow: auto;
+	white-space: nowrap;
+}
+
+div.scrollmenu a {
+	display: inline-block;
+	color: white;
+	text-align: center;
+	padding: 14px;
+	text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+	background-color: #fff;
+}
+
+.scrollbar
+{
+	margin-left: 30px;
+	float: left;
+	height: 175px;
+	width: 90%;
+	background: #F5F5F5;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+	margin-bottom: 25px;
+}
+
+#style-13::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.9);
+	border-radius: 10px;
+	background-color: #CCCCCC;
+}
+
+#style-13::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#style-13::-webkit-scrollbar-thumb
+{
+	height: 5px;
+	border-radius: 10px;
+	background-color: #3098E9;
+	background-image: -webkit-linear-gradient(90deg,
+											  transparent,
+											  rgba(0, 0, 0, 0.4) 50%,
+											  transparent,
+											  transparent)
+}
+
+

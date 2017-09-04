@@ -1,6 +1,10 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    var all = ViewData["ProductsCount"] as List<int>;
+    var floor = ViewData["Flooring"] as Dictionary<int, Tuple<string, string>>;
 }
+
+<script src="~/Scripts/core.js"></script>
 
 @*<div class="jumbotron">
     <h1>This is the home page</h1>
@@ -31,30 +35,31 @@
 
 <div class="slideshow-container">
 
-    <div class="mySlides fade">
+    <div class="mySlides fade-slide">
         <div class="numbertext">1 / 3</div>
-        <div class="img-header">3MA</div>
-        <img src="~/images/slide-1.jpg" style="width:100%">
+        <div class="img-header"><b>3MA</b></div>
+        <img src="~/images/slide-1.jpg" class="slideshow-image">
         <div class="text">Slide 1!</div>
     </div>
 
-    <div class="mySlides fade">
+    <div class="mySlides fade-slide">
         <div class="numbertext">2 / 3</div>
-        <div class="img-header">3MA</div>
-        <img src="~/images/slide-2.jpg" style="width:100%">
+        <div class="img-header"><b>3MA</b></div>
+        <img src="~/images/slide-2.jpg" class="slideshow-image">
         <div class="text">Caption Two</div>
     </div>
 
-    <div class="mySlides fade">
-        <div class="img-header">3MA</div>
+    <div class="mySlides fade-slide">
+        <div class="img-header"><b>3MA</b></div>
         <div class="numbertext">3 / 3</div>
-        <img src="~/images/slide-3.jpg" style="width:100%">
+        <img src="~/images/slide-3.jpg" class="slideshow-image">
         <div class="text">Caption Three</div>
     </div>
 
     <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
     <a class="next" onclick="plusSlides(1)">&#10095;</a>
 </div>
+
 <br>
 
 <div style="text-align:center">
@@ -64,40 +69,224 @@
 </div>
 
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-4">
         <h2>News</h2>
         <p>System or company news can go here</p>
         <p>Instructions on how to use systems can also go here</p>
         <p>Other text or links can go here aswell.</p>
     </div>
+</div>*@
+
+
+<h4 style="padding-top: 100px;">We have <span style="color:darkblue;"><b>@all[0]</b></span> items in stock</h4>
+<br/>
+
+<div class="home_item_box" style="background-color: #91edf5">
+    <p>Flooring</p>
+    <h1>@all[1]</h1>
 </div>
+
+<div class="home_item_box" style="background-color: #a2c8cc">
+    <p>Tiles</p>
+    <h1>@all[2]</h1>
+</div>
+
+<div class="home_item_box" style="background-color: #91edf5">
+    <p>Lighting</p>
+    <h1>@all[3]</h1>
+</div>
+
+<div class="home_item_box" style="background-color: #a2c8cc">
+    <p>Appliances</p>
+    <h1>@all[4]</h1>
+</div>
+
+<div class="home_item_box" style="background-color: #91edf5">
+    <p>Fixtures</p>
+    <h1>@all[5]</h1>
+</div>
+
+
+<div class="row" style="padding-top: 150px;">
+    <div class="col-md-4" style="padding-bottom: 100px;" >
+        <img src="~/images/user.png" alt="Can\'t find image" class="center-block" />
+        <h2 style="text-align:center;" >Register.</h2>
+        <p style="text-align:center;" >
+            Create your free account now and start shopping for your new home supplies. No credit card needed for signup.
+        </p>
+        @*<p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>*@
+    </div>
+    <div class="col-md-4" style="padding-bottom: 100px;" >
+        <img src="~/images/online-store.png" alt="Can\'t find image" class="center-block" />
+        <h2 style="text-align:center;" >Shop.</h2>
+        <p style="text-align:center;" >Browse through our large selection of products and select whatever you need.</p>
+    </div>
+    <div class="col-md-4" style="padding-bottom: 100px;" >
+        <img src="~/images/dollar.png" alt="Can\'t find image" class="center-block" />
+        <h2 style="text-align:center;" >Save.</h2>
+        <p style="text-align:center;" >The more you order, the bigger your savings are. Once the order is complete, our team of professionals will contact you to discuss your savings.</p>
+    </div>
+</div>
+
+<br />
+
+@* Product Category Tiles *@
+<div class="section row justify-content-md-center">
+    @*<div class="col-sm-11 col-md-1 col-lg-offset-1 col-centered"></div>*@
+
+
+    <div class="col-sm-2 col-sm-offset-2 hidden-md hidden-lg"></div>
+
+        <div class="col-sm-8 col-md-6 col-lg-4 col-centered">
+            <div class="contain-category" href>
+                <img src="~/images/appliances-home.jpg" class="contain-image" />
+                <p class="contain-text">Appliances</p>
+            </div>
+        </div>
+
+    <div class="col-sm-2 col-sm-offset-2 hidden-md hidden-lg"></div>
+
+        <div class="col-sm-8 col-md-6 col-lg-4 col-centered" onclick="onHomeCategory('Flooring')">
+            <div class="contain-category">
+                <img src="~/images/fixtures-home.jpg" class="contain-image" />
+                <p class="contain-text">Fixtures</p>
+            </div>
+        </div>
+
+    <div class="col-sm-2 col-sm-offset-2 hidden-md hidden-lg"></div>
+
+        <a href="@Url.Action("Flooring_Category", "Product")">
+            <div class="col-sm-8 col-md-6 col-lg-4 col-centered">
+                <div class="contain-category">
+                    <img src="~/images/flooring-home.jpg" class="contain-image" @*onclick="@Html.Action("Flooring_Category", "Product");"*@ />
+                    <p class="contain-text">Flooring</p>
+                </div>
+            </div>
+        </a>
+
+    <div class="col-sm-2 col-sm-offset-2 col-md-1 col-lg-2 col-md-offset-0 col-lg-offset-0"></div>
+
+        <div class="col-sm-8 col-md-6 col-lg-4 col-centered">
+            <div class="contain-category">
+                <img src="~/images/lighting-home.jpg" class="contain-image" />
+                <p class="contain-text">Lighting</p>
+            </div>
+        </div>
+
+    <div class="col-sm-2 col-sm-offset-2 col-md-3 hidden-lg col-md-offset-0"></div>
+
+        <div class="col-sm-8 col-md-6 col-lg-4 col-centered">
+            <div class="contain-category">
+                <img src="~/images/tiles-home.jpg" class="contain-image" />
+                <p class="contain-text">Tiles</p>
+            </div>
+        </div>
+
+    <div class="col-sm-2 col-sm-offset-2 col-md-3 col-lg-2"></div>
+</div>
+
+<br /><br />
+
+@*<h3>Flooring products</h3>
+<div class="scrollbar" id="style-13" style="padding-bottom: 50px;">
+    @foreach (var f in floor)
+    {
+        <dev class="tainer" style="margin: 2px;  cursor: pointer;">
+            <a href="@Url.Action("Details", "Home", new { id = 20 })" title="hi">
+                <img src=@f.Value.Item2 alt="Can\'t find image" style="width: 125px; height: 125px;" />
+                <p class="ext" style="bottom: -66px;">@f.Value.Item1</p>
+            </a>
+        </dev>
+    }
+</div>*@
+
+@* 43.700049, -79.468709 *@
+
+
+@*<div class="scrollbar" id="style-13">
+    <div class="force-overflow"></div>
+</div>*@
+
+
+
+<h3>Location</h3>
+<p style="padding-left: 20px; padding-bottom: 10px;">
+    79 Kincort Street<br />
+    Toronto, Ontario<br />
+    M6M 5G7
+</p>
+
+@*<iframe style="width: 100%; height: 350px;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+        src="http://maps.google.com/maps?q=q&amp;ie=UTF8&amp;ll=43.700049,-79.468709&amp;t=m&amp;z=13&amp;output=embed"></iframe><br />
+
+<iframe style="width: 100%; height: 350px;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+        src="http://maps.google.com/maps?q=43.700049,-79.468709&z=15&output=embed"></iframe>*@
+
+<iframe style="width: 100%; height: 350px; border: 0"
+        frameborder="0"
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDXfWto-DAL8nSA_4zZ97f7L__wD-GdklU
+&q=79+Kincort,Toronto+ON" allowfullscreen></iframe>
 
 <script>
     var slideIndex = 1;
+    var mySlide;
     showSlides(slideIndex);
 
     function plusSlides(n) {
-      showSlides(slideIndex += n);
+        showSlides(slideIndex += n);
     }
 
     function currentSlide(n) {
-      showSlides(slideIndex = n);
+        showSlides(slideIndex = n);
     }
 
     function showSlides(n) {
-      var i;
-      var slides = document.getElementsByClassName("mySlides");
-      var dots = document.getElementsByClassName("dot");
-      if (n > slides.length) {slideIndex = 1}
-      if (n < 1) {slideIndex = slides.length}
-      for (i = 0; i < slides.length; i++) {
-          slides[i].style.display = "none";
-      }
-      for (i = 0; i < dots.length; i++) {
-          dots[i].className = dots[i].className.replace(" active", "");
-      }
-      slides[slideIndex-1].style.display = "block";
-      dots[slideIndex-1].className += " active";
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("dot");
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " active";
+        clearInterval(mySlide);
+        mySlide = setInterval(autoSlide, 15000);
     }
+
+    function autoSlide() {
+        plusSlides(1);
+    }
+
+    //$(document).ready(function () {
+    //    if (!$.browser.webkit) {
+    //        $('.wrapper').html('<p>Sorry! Non webkit users. :(</p>');
+    //    }
+    //});
+
+    function AddToCart(id) {
+        alert(id);
+        $.ajax({
+            url: 'Home/Details',
+            data: { id: id }
+        })
+            .done(function () { alert('Added'); })
+        ;
+    }
+
+
+    function onHomeCategory(cat) {
+        $.ajax({
+            type: "POST",
+            url: "/" + cat + "_Category/",
+            contentType: "application/json; charset=utf-8"
+        });
+    }
+
 </script>
+

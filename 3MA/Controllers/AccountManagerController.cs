@@ -139,11 +139,21 @@ namespace _3MA.Controllers
             try {
                 try
                 {
-                    m.POrderDeleteWithCustomerID(id);
+                    string role = m.GetUserRole(id);
+
+                    if (role == "Customer")
+                    {
+                        m.POrderDeleteWithCustomerID(id);
+                    }
+                    else if(role == "Client")
+                    {
+                        m.ProjectDeleteWithClientID(id);
+                    }
+
                 }
                 catch (Exception ex)
                 {
-
+                    Console.WriteLine(ex);
                 }
 
                 // User stays logged in, need a way to kill the session

@@ -147,25 +147,19 @@ namespace _3MA.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(string returnUrl)
         {
-            // ############################################################
             // Account/Login code was modified
-            // Its purpose is to create a new 'admin' user (with a password of 'Password123!')
-            // the first time that the login view/page appears
             // The method's signature was also changed to run asynchronously
 
             if (UserManager.Users.Count() == 0)
             {
-                var user = new ApplicationUser { UserName = "admin@example.com", Email = "admin@example.com" };
+                var user = new ApplicationUser { UserName = "admin@3ma.com", Email = "admin@3ma.com" };
                 var result = await UserManager.CreateAsync(user, "Password123!");
                 // Add claims
-                await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Email, "admin@example.com"));
+                await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Email, "admin@3ma.com"));
                 await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "Admin"));
                 await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.GivenName, "Application"));
                 await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Surname, "Administrator"));
             }
-
-            // End of new code block
-            // ############################################################
 
             ViewBag.ReturnUrl = returnUrl;
             return View();
@@ -180,6 +174,10 @@ namespace _3MA.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var errors = ModelState.Select(x => x.Value.Errors)
+                       .Where(y => y.Count > 0)
+                       .ToList();
+
                 return View(model);
             }
 
@@ -244,20 +242,63 @@ namespace _3MA.Controllers
             }
         }
 
+        [AllowAnonymous]
+        public ActionResult Register_Type()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [Route("Register/Type/{type}")]
+        public ActionResult Type(string type)
+        {
+            TempData["Type"] = type;
+
+            return RedirectToAction("Register");
+        }
+
+        public ActionResult Roles()
+        {
+            var roles = new List<string> { "Customer", "Client", "Admin" };
+            var form = new myRoles();
+            form.RoleList = new MultiSelectList(roles);
+
+            return View(form);
+        }
+
+        [Route("Account/Select/{role}")]
+        public ActionResult Select(string role)
+        {
+            if(role == "customer")
+            {
+                //return RedirectToAction("Register_Cust");
+                return RedirectToAction("Register_Type_Admin");
+            }
+            else if(role == "client")
+            {
+                return RedirectToAction("Register_Client");
+            }
+            else
+            {
+                return RedirectToAction("Register_Admin");
+            }
+        }
+
+
+
         //
         // GET: /Account/Register
+        // Used to create new customer profiles only, new user is logged in after registry
         [AllowAnonymous]
         public ActionResult Register()
         {
             Manager m = new Manager();
-            //var roles = m.RoleClaimGetAllStrings();
 
-            // ATTENTION - List of all roles
-            var roles = new List<string> { "Customer", "Client", "Admin" };
-
-            // Define a register form
+            ViewData["Type"] = TempData["Type"] as string;
+            
+            var stuff = m.ProjectGetList();
+            ViewData["ProjectList"] = stuff;
             var form = new RegisterViewModelForm();
-            form.RoleList = new MultiSelectList(roles);
 
             return View(form);
         }
@@ -270,6 +311,141 @@ namespace _3MA.Controllers
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             Manager m = new Manager();
+
+            // if Plan is not entered, user sign in fails because it is null. Change to an empty string instead
+            if(model.Plan == null) { model.Plan = ""; }
+
+            if (ModelState.IsValid)
+            {
+                //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Suite = model.Suite, Plan = model.Plan };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    // Add claims
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Email, model.Email));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.GivenName, model.GivenName));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Surname, model.Surname));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "User"));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "Customer"));
+
+
+                    // Log me in after registration is complete
+
+                    try
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+
+                    POrderAdd porder = new POrderAdd();
+
+                    porder.HPhone = model.HPhone;
+                    porder.MPhone = model.MPhone;
+                    porder.Name = model.GivenName + " " + model.Surname;
+                    porder.MoveIn = model.MoveIn;
+                    porder.Suite = model.Suite;
+                    porder.Plan = model.Plan;
+                    porder.Street = model.Street;
+                    porder.City = model.City;
+                    porder.Prov = model.Prov;
+                    porder.Country = model.Country;
+                    porder.Postal = model.Postal;
+
+                    if (model.isSameAddress)
+                    {
+                        porder.BillCity = model.City;
+                        porder.BillCountry = model.Country;
+                        porder.BillPostal = model.Postal;
+                        porder.BillProv = model.Prov;
+                        porder.BillStreet = model.Street;
+                    }
+                    else
+                    {
+                        porder.BillCity = model.BillCity;
+                        porder.BillCountry = model.BillCountry;
+                        porder.BillPostal = model.BillPostal;
+                        porder.BillProv = model.BillProv;
+                        porder.BillStreet = model.BillStreet;
+                    }
+
+                    if (model.ProjectName != null)
+                    {
+                        porder.ProjectName = model.ProjectName;
+                        porder.ProjectId = m.ProjectGetId(model.ProjectName);
+                    }
+
+                    porder.customerID = user.Id;
+
+                    m.POrderAdd(porder);
+
+                    return RedirectToAction("Details", "Account");
+
+                }
+                AddErrors(result);
+            }
+
+            // Something failed :( redisplay the form
+
+            var form = m.mapper.Map<RegisterViewModelForm>(model);
+            var roles = m.RoleClaimGetAllStrings();
+
+            //form.RoleList = new MultiSelectList(
+            //    items: roles,
+            //    selectedValues: model.Roles);
+
+            if (model.ProjectName != null)
+            {
+                ViewData["Type"] = "project";
+                var stuff = m.ProjectGetList();
+                ViewData["ProjectList"] = stuff;
+                ViewData["Selected"] = model.ProjectName;
+            }
+
+            return View(form);
+        }
+
+        public ActionResult Register_Type_Admin()
+        {
+            return PartialView();
+        }
+
+        [Route("Register_Admin/Type/{type}")]
+        public ActionResult Type_Admin(string type)
+        {
+            TempData["Type"] = type;
+            
+            return RedirectToAction("Register_Cust");
+        }
+
+        // Register_Cust
+        // Used to create accounts of different types, does not log in newly created account
+        public ActionResult Register_Cust()
+        {
+            Manager m = new Manager();
+
+            ViewData["Type"] = TempData["Type"] as string;
+            ViewData["ProjectList"] = m.ProjectGetList();
+
+            // Define a register form
+            var form = new RegisterViewModelForm();
+
+            return PartialView(form);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register_Cust(RegisterViewModel model)
+        {
+            Manager m = new Manager();
+
+            // if Plan is not entered, user sign in fails because it is null. Change to an empty string instead
+            if (model.Plan == null) { model.Plan = ""; }
 
             if (ModelState.IsValid)
             {
@@ -284,38 +460,49 @@ namespace _3MA.Controllers
                     await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.GivenName, model.GivenName));
                     await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Surname, model.Surname));
                     await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "User"));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "Customer"));
 
-                    foreach (var role in model.Roles)
+                    POrderAdd porder = new POrderAdd();
+
+                    porder.HPhone = model.HPhone;
+                    porder.MPhone = model.MPhone;
+                    porder.Name = model.GivenName + " " + model.Surname;
+                    porder.MoveIn = model.MoveIn;
+                    porder.Suite = model.Suite;
+                    porder.Plan = model.Plan;
+                    porder.Street = model.Street;
+                    porder.City = model.City;
+                    porder.Prov = model.Prov;
+                    porder.Country = model.Country;
+                    porder.Postal = model.Postal;
+
+                    if (model.isSameAddress)
                     {
-                        await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, role.Trim()));
+                        porder.BillCity = model.City;
+                        porder.BillCountry = model.Country;
+                        porder.BillPostal = model.Postal;
+                        porder.BillProv = model.Prov;
+                        porder.BillStreet = model.Street;
+                    }
+                    else { 
+                        porder.BillCity = model.BillCity;
+                        porder.BillCountry = model.BillCountry;
+                        porder.BillPostal = model.BillPostal;
+                        porder.BillProv = model.BillProv;
+                        porder.BillStreet = model.BillStreet;
                     }
 
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    if (!model.Roles.Contains("Client") && !model.Roles.Contains("Admin") && model.Roles.Contains("Customer"))
+                    if (model.ProjectName != null)
                     {
-                        POrderAdd porder = new POrderAdd();
-
-                        porder.HPhone = model.HPhone;
-                        porder.MPhone = model.MPhone;
-                        porder.Name = model.GivenName + " " + model.Surname;
-                        porder.MoveIn = model.MoveIn;
-                        porder.Suite = model.Suite;
-                        porder.Plan = model.Plan;
-                        porder.Street = model.Street;
-                        porder.City = model.City;
-                        porder.Prov = model.Prov;
-                        porder.Country = model.Country;
-                        porder.Postal = model.Postal;
-
-                        porder.customerID = user.Id;
-
-                        m.POrderAdd(porder);
+                        porder.ProjectName = model.ProjectName;
+                        porder.ProjectId = m.ProjectGetId(model.ProjectName);
                     }
 
+                    porder.customerID = user.Id;
 
-                    return RedirectToAction("Details", "Account");
-                    
+                    m.POrderAdd(porder);
+
+                    return RedirectToAction("Index", "AccountManager");
                 }
                 AddErrors(result);
             }
@@ -325,11 +512,158 @@ namespace _3MA.Controllers
             var form = m.mapper.Map<RegisterViewModelForm>(model);
             var roles = m.RoleClaimGetAllStrings();
 
-            form.RoleList = new MultiSelectList(
-                items: roles,
-                selectedValues: model.Roles);
+            if (model.ProjectName != null)
+            {
+                ViewData["Type"] = "project";
+                var stuff = m.ProjectGetList();
+                ViewData["ProjectList"] = stuff;
+                ViewData["Selected"] = model.ProjectName;
+            }
 
             return View(form);
+        }
+
+        // Register_Cust
+        // Used to create accounts of different types, does not log in newly created account
+        public ActionResult Register_Client()
+        {
+            // Define a register form
+            var form = new RegisterClientForm();
+
+            return PartialView(form);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register_Client(RegisterClient model)
+        {
+            Manager m = new Manager();
+
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Suite = 0, Plan = "" };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    // Add claims
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Email, model.Email));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.GivenName, model.GivenName));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Surname, model.Surname));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "User"));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "Client"));
+
+                    TempData["Name"] = model.GivenName + " " + model.Surname;
+                    TempData["Id"] = user.Id;
+
+                    ProjectAdd project = new ProjectAdd();
+
+                    project.Name = model.Name;
+                    project.Developer = model.GivenName + " " + model.Surname;
+                    project.Street = model.Street;
+                    project.City = model.City;
+                    project.Province = model.Prov;
+                    project.Country = model.Country;
+                    project.Postal = model.Postal;
+
+                    project.ClientID = user.Id;
+
+                    m.ProjectAdd(project);
+                    
+                    return RedirectToAction("Index", "AccountManager");
+
+                    }
+                AddErrors(result);
+            }
+
+            // Something failed :( redisplay the form
+
+            var form = m.mapper.Map<RegisterViewModelForm>(model);
+            var roles = m.RoleClaimGetAllStrings();
+
+
+            return View(form);
+        }
+
+
+        // Register_Cust
+        // Used to create accounts of different types, does not log in newly created account
+        public ActionResult Register_Admin()
+        {
+            // Define a register form
+            var form = new RegisterAdminForm();
+            //form.RoleList = new MultiSelectList(roles);
+
+            return PartialView(form);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register_Admin(RegisterAdmin model)
+        {
+            Manager m = new Manager();
+
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Suite = 0, Plan = "" };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    // Add claims
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Email, model.Email));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.GivenName, model.GivenName));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Surname, model.Surname));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "User"));
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "Admin"));
+
+                    //return RedirectToAction("Register_Project", "Home");
+                    return RedirectToAction("Index", "AccountManager");
+
+                }
+                AddErrors(result);
+            }
+
+            // Something failed :( redisplay the form
+
+            var form = m.mapper.Map<RegisterViewModelForm>(model);
+            var roles = m.RoleClaimGetAllStrings();
+            
+
+            return View(form);
+        }
+       
+        public ActionResult Create_Project(string name, string id)
+        {
+            Manager m = new Manager();
+
+            ViewData["Name"] = TempData["Name"] as string;
+            ViewData["Id"] = TempData["Id"] as string;
+
+            // Define a register form
+            var form = new ProjectAdd();
+
+            return View(form);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create_Project(ProjectAdd model)
+        {
+            Manager m = new Manager();
+
+            var addedProject = m.ProjectAdd(model);
+
+            if(model == null)
+            {
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         //

@@ -8,6 +8,9 @@ using ClosedXML.Excel;
 using System.IO;
 using Microsoft.AspNet.Identity;
 
+using System.Net;
+using System.Net.Mail;
+
 namespace _3MA.Controllers
 {
     public class OrderController : Controller
@@ -20,7 +23,7 @@ namespace _3MA.Controllers
             TempData["OrdersList"] = new List<int>();
             return View(m.POrderGetAll());
         }
-        
+
         public ActionResult getEndUser()
         {
             //var suites = m.getAllSuites();
@@ -61,7 +64,7 @@ namespace _3MA.Controllers
             {
                 return View(newItem);
             }
-            
+
             return RedirectToAction("Order", newItem);
         }
 
@@ -87,7 +90,7 @@ namespace _3MA.Controllers
             var ws = workbook.Worksheets.Add("Purchase Order");
 
             int row = 5;
-            
+
             // Format shheet
             ws.Column(1).Width = 5;
             ws.Column(10).Width = 5;
@@ -147,8 +150,6 @@ namespace _3MA.Controllers
 
                 row++;
             }
-
-
 
 
             workbook.SaveAs(fs);
@@ -269,7 +270,7 @@ namespace _3MA.Controllers
             }
             else
             {
-                // get current users suite number - obsolite method of order 
+                // get current users suite number - obsolite method of order
                 //id = User.Identity.GetCustomerSuite();
                 id = User.Identity.GetUserId();
             }
@@ -319,7 +320,7 @@ namespace _3MA.Controllers
             order.Qty = TempData["ProductsQtyList"] as Dictionary<int, int>;
             order.Room = TempData["ProductsLocList"] as Dictionary<int, string>;
 
-            var updated_order = m.POrderEdit(order);
+            var updated_order = m.POrderEdit(order);        //HERE FIX
 
             if(updated_order == null)
             {
@@ -327,13 +328,16 @@ namespace _3MA.Controllers
             }
             else
             {
+                //m.POrderEdit(order);
                 return View("Order_review", updated_order);
             }
         }
 
-        public ActionResult Order_Accept(int suite)
+        public ActionResult Order_Accept(int Id)
         {
-            var order = m.POrderGetBySuite(suite);
+            // var order = m.POrderGetBySuite(suite);
+
+            var order = m.POrderGetById(Id);
 
             order.Completed = true;
             order.OrderPlaced = DateTime.Now;
@@ -349,6 +353,8 @@ namespace _3MA.Controllers
             return View("Complete");
         }
 
+        // ProductListSave - On product image click, select / deselect the product
+        // id - Id of product selected / deselected
         [HttpPost]
         public ActionResult ProductListSave(int id)
         {
@@ -368,10 +374,50 @@ namespace _3MA.Controllers
             return null;
         }
 
+        // AccListSave - On accessory image click, select / deselect the accessory
+        // id - Id of accessory selected / deselected
+        // item - Id of the product that the accessory belongs to
+        [HttpPost]
+        public ActionResult AccListSave(int id, int item)
+        {
+            string po = TempData["OrderID"] as string;
+            TempData["OrderID"] = po;
+            //Dictionary<int, int> ints = TempData["AccsIdsList"] as Dictionary<int, int>;
+            Dictionary<int, int> ints = m.POrderAccessoriesList(po);
+            if(ints == null) { return null; }
+            bool addMe = true;
+
+            foreach(var a in ints)
+            {
+                if (a.Key == id && a.Value == item)
+                {
+                    ints.Remove(id);
+                    addMe = false;
+                    break;
+                }
+            }
+            if (addMe)
+            {
+                ints.Add(id, item);
+            }
+
+            if (m.POrderAccList(po, ints) == false)
+            {
+                Console.WriteLine("Could not save accessory list.");
+            }
+
+            //TempData["AccsIdsList"] = ints;
+
+            return null;
+        }
+
+        // ProductQtySave
+        // receive the product id and quantity, add it into TempData
+        // id - the ID of the product
+        // qty - quantity of this product
         [HttpPost]
         public ActionResult ProductQtySave(int id, int qty)
         {
-
             Dictionary<int, int> qtys= TempData["ProductsQtyList"] as Dictionary<int, int>;
             int dict;
             if (!qtys.TryGetValue(id, out dict))
@@ -388,6 +434,10 @@ namespace _3MA.Controllers
             return null;
         }
 
+        // ProductLocSave
+        // receive the product id and room locations, add it into TempData
+        // id - the ID of the product
+        // loc - room location(s)
         [HttpPost]
         public ActionResult ProductLocSave(int id, string loc)
         {
@@ -407,7 +457,9 @@ namespace _3MA.Controllers
             return null;
         }
 
-        // Partials
+        // V1.0
+
+        // Partials views foreach category
         [Route("Paint_order/")]
         public ActionResult Paint()
         {
@@ -435,10 +487,10 @@ namespace _3MA.Controllers
             //search.dimZ = new List<string> { "rl", "1218mm", "1285mm", "1835mm", "25% 73\"", "up to 73\"", "up to 86\""};
             //search.PriceCat = new List<string> { "A", "B", "C", "D", "E" };
 
-            search.dimX = m.getAllDimX();
-            search.dimY = m.getAllDimY();
-            search.dimZ = m.getAllDimZ();
-            search.PriceCat = m.getAllPriceCat();
+            search.dimX = m.getAllDimX("Flooring");
+            search.dimY = m.getAllDimY("Flooring");
+            search.dimZ = m.getAllDimZ("Flooring");
+            search.PriceCat = m.getAllPriceCat("Flooring");
 
             return PartialView("_Flooring", search);
         }
@@ -467,28 +519,58 @@ namespace _3MA.Controllers
             return PartialView("_Flooring", new ProductSearchForm());
         }
 
+        // ProductSub - receives main and sub category, and returns all products under that sub category
+        // cat - main category
+        // sub - sub category
+        // return - partial view '_ProductList', with an POrder object containing all the products
         [Route("order/sub/{cat}/{sub}")]
         public ActionResult ProductSub(string cat, string sub)
         {
-            //int id = (int)TempData["Suite"];
-            string id = (string)TempData["OrderID"];
+            string id = TempData["OrderID"] as string;
+
+            var form = m.POrderGetByCustId(id);
+
+            form.AllProducts = m.ProductSearch(cat, sub).ToList();
 
             //TempData["Suite"] = id;
             TempData["OrderID"] = id;
 
-            //var form = m.POderGetById(User.Identity.GetCustomerSuite());
-            var form = m.POrderGetByCustId(id);
-            form.AllProducts = m.ProductSearch(cat, sub).ToList();
-
             List<int> ints = TempData["ProductIdsList"] as List<int>;
             form.IdProductList = ints;
-            
             TempData["ProductIdsList"] = ints;
+
+            Dictionary<int, int> qty = TempData["ProductsQtyList"] as Dictionary<int, int>;
+            form.Qty = qty;
+            TempData["ProductsQtyList"] = qty;
+
+            Dictionary<int, string> room = TempData["ProductsLocList"] as Dictionary<int, string>;
+            form.Room = room;
+            TempData["ProductsLocList"] = room;
+
+            //foreach(var a in form.AllAccessories)
+            //{
+            //    if(ints.Contains())
+            //    form.IdAccList.Add(a.)
+            //}
+
+            if (form.AllProducts.Count == 0 || form == null)
+            {
+                //return Content("<h3>No results found.</h3>", "text/html");
+                return PartialView("NotFound");
+            }
 
             return PartialView("_ProductList", form);
         }
 
-        // ProductSearch - Search for specific products.
+        // ProductSearch - Search for specific products and return list of the results
+        // cat - main category
+        // sub - sub category
+        // nam - name of search
+        // x - x dimension of search
+        // y - y dimension of search
+        // z - z dimension of search
+        // price - price of result
+        // return - parial view '_ProductList, with an POrder object containing all products
         [Route("order/search/{cat}/{col}/{nam}/{x}/{y}/{z}/{price}")]
         public ActionResult ProductSearch(string cat, string col, string nam, string x, string y, string z, string price)
         {
@@ -497,12 +579,25 @@ namespace _3MA.Controllers
 
             var form = m.POrderGetByCustId(id);
 
-            form.AllProducts = m.ProductSearchForm(cat, col, nam, x, y, z, price).ToList();
+            List<string> filterCat = new List<string>();
+            form.AllProducts = m.ProductSearchForm(cat, col, nam, x, y, z, price, filterCat).ToList();
 
             //TempData["Suite"] = id;
             TempData["OrderID"] = id;
 
-            if(form.AllProducts.Count == 0 || form == null)
+            List<int> ints = TempData["ProductIdsList"] as List<int>;
+            form.IdProductList = ints;
+            TempData["ProductIdsList"] = ints;
+
+            Dictionary<int, int> qty = TempData["ProductsQtyList"] as Dictionary<int, int>;
+            form.Qty = qty;
+            TempData["ProductsQtyList"] = qty;
+
+            Dictionary<int, string> room = TempData["ProductsLocList"] as Dictionary<int, string>;
+            form.Room = room;
+            TempData["ProductsLocList"] = room;
+
+            if (form.AllProducts.Count == 0 || form == null)
             {
                 //return Content("<h3>No results found.</h3>", "text/html");
                 return PartialView("NotFound");
@@ -516,7 +611,7 @@ namespace _3MA.Controllers
         {
             return Json(new POrderBase());
         }
-        
+
         // Save the excel file on a local machine
         public Stream GetStream(XLWorkbook excelWorkbook)
         {
@@ -542,6 +637,82 @@ namespace _3MA.Controllers
 
             TempData["OrdersList"] = ints;
         }
+
+
+        // V2.0
+
+        public ActionResult Home()
+        {
+            return View();
+        }
+
+        // Flooring_Main - Open flooring search page. This is V2.0+
+        [Route("Flooring/")]
+        public ActionResult Flooring_Main()
+        {
+            var search = new ProductSearchForm();
+
+            search.dimX = m.getAllDimX("Flooring");
+            search.dimY = m.getAllDimY("Flooring");
+            search.dimZ = m.getAllDimZ("Flooring");
+            search.PriceCat = m.getAllPriceCat("Flooring");
+
+            search.Filter.Add("All", true);
+            search.Filter.Add("Hardwood", false);
+            search.Filter.Add("Laminate", false);
+
+            return View("Flooring", search);
+        }
+
+        // Search - Search for specific products and return list of the results
+        // cat - main category
+        // sub - sub category
+        // nam - name of search
+        // x - x dimension of search
+        // y - y dimension of search
+        // z - z dimension of search
+        // price - price of result
+        // a -
+        // b -
+        // c -
+        // d -
+        // e -
+        // return - parial view '_ProductList, with an POrder object containing all products
+        [Route("search/{cat}/{col}/{nam}/{x}/{y}/{z}/{price}/{a}/{b}/{c}/{d}/{e}")]
+        public ActionResult Search(string cat, string col, string nam, string x, string y, string z, string price, string a, string b, string c, string d, string e)
+        {
+            List<string> filterCat = new List<string>();
+            if (a != "0") { filterCat.Add(a); }
+            if (b != "0") { filterCat.Add(b); }
+            if (c != "0") { filterCat.Add(c); }
+            if (d != "0") { filterCat.Add(d); }
+            if (e != "0") { filterCat.Add(e); }
+
+            if (filterCat.Count() == 0)
+            {
+                return PartialView("NotFound");
+            }
+
+            var products = m.ProductSearchForm(cat, col, nam, x, y, z, price, filterCat).ToList();
+
+            if (products.Count == 0 || products == null)
+            {
+                //return Content("<h3>No results found.</h3>", "text/html");
+                return PartialView("NotFound");
+            }
+
+            return PartialView("_Search", products);
+        }
+
+        public ActionResult Select(int id)
+        {
+
+
+
+
+            return View();
+        }
+
 
         public ActionResult CreatePO()
         {
@@ -749,6 +920,25 @@ namespace _3MA.Controllers
             return new FileStreamResult(fs, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName = name };
         }
 
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.To.Add("mmbabol@gmail.com");
+                mailMessage.From = new MailAddress("mmbabol@gmail.com");
+                mailMessage.Subject = "ASP.NET e-mail test";
+                mailMessage.Body = "Hello world,\n\nThis is an ASP.NET test e-mail!";
+                SmtpClient smtpClient = new SmtpClient("smtp.your-isp.com");
+                smtpClient.Send(mailMessage);
+                Response.Write("E-mail sent!");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("Could not send the e-mail - error: " + ex.Message);
+            }
+        }
+
         // GET: Order/Edit/5
         public ActionResult Edit()
         {
@@ -820,7 +1010,7 @@ namespace _3MA.Controllers
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex);
             }
 
             return RedirectToAction("Index");

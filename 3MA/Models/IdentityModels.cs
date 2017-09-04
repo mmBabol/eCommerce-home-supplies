@@ -10,6 +10,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 namespace _3MA.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
+    // This is the basic identity unit for managing individual accounts
     public class ApplicationUser : IdentityUser
     {
         public int Suite { get; internal set; }
@@ -29,6 +30,7 @@ namespace _3MA.Models
         }
     }
 
+    // Entity Framework context used to manage interaction between our application and the database where our Account data is persisted.
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext() : base("DataContext", throwIfV1Schema: false) { }
@@ -40,8 +42,9 @@ namespace _3MA.Models
         public DbSet<RoomFloor> FloorPlans { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<POrder> POrders { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Accessories> Accessories { get; set; }
         //public DbSet<OneProduct> OneProduct { get; set; }
-
 
         // Turn OFF cascade delete, which is (unfortunately) the default setting
         // for Code First generated databases

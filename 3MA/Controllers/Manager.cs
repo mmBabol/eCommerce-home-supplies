@@ -25,7 +25,7 @@ namespace _3MA.Controllers
         private ApplicationDbContext ds = new ApplicationDbContext();
 
         // Property to hold the user account for the current request
-        
+
 
         // AutoMapper components
         MapperConfiguration config;
@@ -77,7 +77,7 @@ namespace _3MA.Controllers
             {
                 // ATTENTION - mapper definitions
                 // cfg.CreateMap<SourceType, DestinationType>();
-                
+
 
                 cfg.CreateMap<Models.RegisterViewModel, Models.RegisterViewModelForm>();
 
@@ -109,6 +109,12 @@ namespace _3MA.Controllers
                 cfg.CreateMap<Controllers.POrderBase, Controllers.POrderEditForm>();
                 cfg.CreateMap<Controllers.POrderEditInfo, Controllers.POrderEditForm>();
                 cfg.CreateMap<Controllers.POrderEditInfo, Models.POrder>();
+
+                cfg.CreateMap<Models.Project, Controllers.ProjectBase>();
+                cfg.CreateMap<Controllers.ProjectAdd, Models.Project>();
+
+                cfg.CreateMap<Models.Accessories, Controllers.AccessoriesBase>();
+                cfg.CreateMap<Controllers.AccessoriesAdd, Models.Accessories>();
 
                 cfg.CreateMap<Models.ApplicationUser, Controllers.ApplicationUserBase>();
                 cfg.CreateMap<Controllers.RequestUser, Controllers.ApplicationUserBase>();
@@ -145,7 +151,7 @@ namespace _3MA.Controllers
         // Ensure that the methods accept and deliver ONLY view model objects and collections
         // The collection return type is almost always IEnumerable<T>
 
-        
+
         // Attention - Code snippets
         // cw - Console.WriteLine();
         // do - do loop
@@ -166,6 +172,11 @@ namespace _3MA.Controllers
 
 
         // Get all
+        public IEnumerable<AccessoriesBase> AccessoriesGetAll()
+        {
+            return mapper.Map<IEnumerable<AccessoriesBase>>(ds.Accessories.OrderBy(p => p.Id));
+        }
+
         public IEnumerable<PackageBase> PackadgeGetAll()
         {
             return mapper.Map<IEnumerable<PackageBase>>(ds.Packages.OrderBy(p => p.Id));
@@ -188,8 +199,28 @@ namespace _3MA.Controllers
 
         public IEnumerable<POrderBase> POrderGetAll()
         {
-            return mapper.Map<IEnumerable<POrderBase>>(ds.POrders.OrderBy(o => o.Suite).ThenBy(d => d.Id));
+            //return mapper.Map<IEnumerable<POrderBase>>(ds.POrders.OrderBy(o => o.Suite).ThenBy(d => d.Id));
+            return mapper.Map<IEnumerable<POrderBase>>(ds.POrders.OrderBy(o => o.ProjectName).ThenBy(d => d.Id));
             //return mapper.Map<IEnumerable<POrderBase>>(ds.POrders.SingleOrDefault(z => z.Completed == true));
+        }
+
+        public IEnumerable<ProjectBase> ProjectGetAll()
+        {
+            return mapper.Map<IEnumerable<ProjectBase>>(ds.Projects.OrderBy(o => o.Name).ThenBy(d => d.Developer));
+        }
+
+        public List<string> ProjectGetList()
+        {
+            var all = ds.Projects.OrderBy(d => d.Developer).ThenBy(n => n.Name);
+
+            List<string> list = new List<string>();
+
+            foreach(var pro in all)
+            {
+                list.Add(pro.Name + " - " + pro.Developer);
+            }
+
+            return list;
         }
 
         public IEnumerable<ApplicationUserBase> UsersGetAll()
@@ -234,7 +265,7 @@ namespace _3MA.Controllers
             {
                 dict.Add(po.Suite, (po.Completed) ? true : false);
             }
-            
+
             return dict;
         }
 
@@ -243,48 +274,159 @@ namespace _3MA.Controllers
         {
             var dict = new Dictionary<string, Tuple<string, bool>>();
             var POrders = POrderGetAll();
+            var Key = "";
 
             foreach (var po in POrders)
             {
-                Tuple<string, bool> tup = new Tuple<string, bool>(po.getAddressName, (po.Completed) ? true : false);
+
+                if(po.ProjectName == null)
+                {
+                    Key = po.getAddressName;
+                }
+                else
+                {
+                    //if(po.ProjectName != project)
+                    //{
+                    //    // Used for headers in the select list
+                    //    project = po.ProjectName;
+                    //    Tuple<string, bool> tupi = new Tuple<string, bool>(project, false);
+                    //    dict.Add("head", tupi);
+                    //}
+                    Key = po.getSuite;
+                }
+                Tuple<string, bool> tup = new Tuple<string, bool>(Key, (po.Completed) ? true : false);
                 dict.Add(po.customerID, tup);
             }
 
             return dict;
         }
 
-        public List<string> getAllDimX()
+        public List<string> getAllDimX(string cat)
         {
-            var o = ds.Products.Select(x => x.DimW).Distinct();
+            var o = ds.Products.Where(m => m.MainCategory == cat).Select(x => x.DimW).Distinct();
 
             return o.ToList();
         }
 
-        public List<string> getAllDimY()
+        public List<string> getAllDimY(string cat)
         {
-            var o = ds.Products.Select(x => x.DimTH).Distinct();
+            var o = ds.Products.Where(m => m.MainCategory == cat).Select(x => x.DimTH).Distinct();
 
             return o.ToList();
         }
 
-        public List<string> getAllDimZ()
+        public List<string> getAllDimZ(string cat)
         {
-            var o = ds.Products.Select(x => x.DimL).Distinct();
+            var o = ds.Products.Where(m => m.MainCategory == cat).Select(x => x.DimL).Distinct();
 
             return o.ToList();
         }
 
-        public List<string> getAllPriceCat()
+        public List<string> getAllPriceCat(string cat)
         {
-            var o = ds.Products.Select(x => x.PriceCategory).Distinct();
+            var o = ds.Products.Where(m => m.MainCategory == cat).Select(k => k.PriceCategory).Distinct();
 
             return o.ToList();
         }
+
+        // getCount
+        // List<int>
+        // return count of items, used for home page to show number of current items in a category
+        public List<int> getCount()
+        {
+            List<int> count = new List<int>();
+
+            // Number of total products
+            count.Add(ds.Products.Count());
+
+            // Number of total flooring products
+            count.Add(ds.Products.Where(f => f.MainCategory.ToLower().Equals("flooring")).Count());
+
+            // Number of total tiles products
+            count.Add(ds.Products.Where(f => f.MainCategory.ToLower().Equals("tile")).Count());
+
+            // Number of total lighting products
+            count.Add(ds.Products.Where(f => f.MainCategory.ToLower().Equals("lighting")).Count());
+
+            // Number of total appliances products
+            count.Add(ds.Products.Where(f => f.MainCategory.ToLower().Equals("appliances")).Count());
+
+            // Number of total fixtures products
+            count.Add(ds.Products.Where(f => f.MainCategory.ToLower().Equals("plumbing")).Count());
+
+            return count;
+        }
+
+        public int ProjectGetId(string name)
+        {
+            var result = ds.Projects.SingleOrDefault(n => n.Name.ToLower().Equals(name.ToLower()));
+
+            if (result == null)
+            {
+                return 0;
+            }
+            else
+            {
+                var project = mapper.Map<ProjectBase>(result);
+                return project.Id;
+            }
+        }
+
+        public Dictionary<int, Tuple<string, string>> getProduct(string category)
+        {
+            var flooringList = ds.Products.Where(fl => fl.MainCategory.ToLower().Contains(category.ToLower()));
+
+            Dictionary<int, Tuple<string, string>> dict = new Dictionary<int, Tuple<string, string>>();
+            int c = 0;
+
+            foreach(var item in flooringList)
+            {
+                if(c >= 10) { break; }
+                if(item.Image != null)
+                {
+                    Tuple<string, string> i = new Tuple<string, string>(item.Name, item.Image);
+                    dict.Add(item.Id, i);
+                }
+                c++;
+            }
+
+            return dict;
+        }
+
 
         // Get one
+        public AccessoriesBase AccessoriesGetById(int id)
+        {
+            // Attempt to fetch the object
+            var p = ds.Accessories.SingleOrDefault(o => o.Id == id);
+
+            // Return the result, null if not found
+            return (p == null) ? null : mapper.Map<AccessoriesBase>(p);
+        }
+
+        public Dictionary<int, int> POrderAccessoriesList(string id)
+        {
+            // Attempt to fetch the object
+            //var p = ds.POrders.SingleOrDefault(o => o.Id == id);
+            var p = POrderGetByCustId(id);
+            if(p == null) { return null; }
+
+            // Return the result, null if not found
+            return (p.IdAccList == null) ? null : p.IdAccList;
+        }
+
+        public ProjectBase ProjectGetById(int id)
+        {
+            // Attempt to fetch the object
+            var p = ds.Projects.SingleOrDefault(o => o.Id == id);
+
+            // Return the result, null if not found
+            return (p == null) ? null : mapper.Map<ProjectBase>(p);
+        }
+
         public POrderBase POrderGetBySuite(int suite)
         {
-            // Attempt to fetchthe object
+            // Attempt to fetch the object
             var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.Suite == suite);
 
             // Return the result, null if not found
@@ -293,7 +435,7 @@ namespace _3MA.Controllers
 
         public POrderBase POrderGetByCustId(string ID)
         {
-            // Attempt to fetchthe object
+            // Attempt to fetch the object
             var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.customerID == ID);
 
             // Return the result, null if not found
@@ -302,7 +444,7 @@ namespace _3MA.Controllers
 
         public POrderBase POrderGetById(int id)
         {
-            // Attempt to fetchthe object
+            // Attempt to fetch the object
             var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.Id == id);
 
             // Return the result, null if not found
@@ -311,7 +453,7 @@ namespace _3MA.Controllers
 
         public PackageWithProducts PackageGetById(int id)
         {
-            // Attempt to fetchthe object
+            // Attempt to fetch the object
             var p = ds.Packages.Include("Products").SingleOrDefault(o => o.Id == id);
 
             // Return the result, null if not found
@@ -365,6 +507,7 @@ namespace _3MA.Controllers
                 return mapper.Map<IEnumerable<POrderBase>>(p.OrderBy(s => s.Suite));
             }
         }
+
         public IEnumerable<ProductBase> ProductSearch(string category, string sub)
         {
             if (string.IsNullOrEmpty(category))
@@ -373,21 +516,21 @@ namespace _3MA.Controllers
             }
             else if(sub == "All")
             {
-                var a = ds.Products
+                var a = ds.Products.Include("AllAccessories")
                     .Where(t => t.MainCategory.ToLower().Contains(category.ToLower()));
 
                 return mapper.Map<IEnumerable<ProductBase>>(a.OrderBy(d => d.SubCategory).
                     ThenBy(ad => ad.Name).ThenBy(p => p.PriceCategory));
             }
 
-            var c = ds.Products
+            var c = ds.Products.Include("AllAccessories")
                 .Where(t => t.MainCategory.ToLower().Contains(category.ToLower()))
                 .Where(s => s.SubCategory.ToLower().Contains(sub.ToLower()));
 
             return mapper.Map<IEnumerable<ProductBase>>(c.OrderBy(a => a.Name).ThenBy(p => p.PriceCategory));
         }
 
-        public IEnumerable<ProductBase> ProductSearchForm(string category, string colour, string name, string dimX, string dimY, string dimZ, string price)
+        public IEnumerable<ProductBase> ProductSearchForm(string category, string colour, string name, string dimX, string dimY, string dimZ, string price, List<string> filterCat)
         {
             if (string.IsNullOrEmpty(category))
             {
@@ -396,7 +539,33 @@ namespace _3MA.Controllers
 
             //var p = ds.Products.Where(a => a.MainCategory.ToLower().Contains(category.ToLower())).Where(a => a.Name.ToLower().Contains(name.ToLower()));
 
-            var p = ds.Products.Where(a => a.MainCategory.ToLower().Contains(category.ToLower()));
+            var p = ds.Products.Include("AllAccessories").Where(a => a.MainCategory.ToLower().Contains(category.ToLower()));
+
+            if (!filterCat.Contains("All"))
+            {
+
+
+                while (filterCat.Count < 4)
+                {
+                    filterCat.Add("null");
+                }
+
+                string a = filterCat[0],
+                    b = filterCat[1],
+                    c = filterCat[2],
+                    d = filterCat[3];
+
+
+
+
+
+
+
+                p = p.Where(n => n.SubCategory.ToLower().Contains(a.ToLower()) ||
+                n.SubCategory.ToLower().Contains(b.ToLower()) ||
+                n.SubCategory.ToLower().Contains(c.ToLower()) ||
+                n.SubCategory.ToLower().Contains(d.ToLower()));
+            }
 
             // TODO: add colour field into database, make it searchable
             //if (colour != "null" && colour != null)
@@ -499,6 +668,15 @@ namespace _3MA.Controllers
             return (addedOrder == null) ? false : true;
         }
 
+        public ProjectBase ProjectAdd(ProjectAdd newItem)
+        {
+
+            var addedItem = ds.Projects.Add(mapper.Map<Project>(newItem));
+            ds.SaveChanges();
+
+            return (addedItem == null) ? null : mapper.Map<ProjectBase>(addedItem);
+        }
+
         // Delete
         public void DeleteUser(string id)
         {
@@ -526,6 +704,48 @@ namespace _3MA.Controllers
             {
                 var result = UserManager.DeleteAsync(user).Result;
             }
+        }
+
+        public bool ProjectDelete(int id)
+        {
+            //var proDel = ds.POrders.Find(id);
+            var proDel = ds.Projects.SingleOrDefault(o => o.Id == id);
+
+            if (proDel == null)
+            {
+                return false;
+            }
+            else
+            {
+                string projectId = proDel.ClientID;
+                proDel.ClientID = null;
+                ds.SaveChanges();
+
+                ds.Projects.Remove(proDel);
+
+                try
+                {
+                    ds.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                return true;
+            }
+        }
+
+        public string ProjectGetID(int id)
+        {
+            var prob = ds.Projects.Find(id);
+            return (prob == null) ? "" : prob.ClientID;
+        }
+
+        public bool ProjectDeleteWithClientID(string id)
+        {
+            var proDel = ds.Projects.SingleOrDefault(o => o.ClientID == id);
+            return ProjectDelete(proDel.Id);
         }
 
         public bool POrderDelete(int id)
@@ -586,7 +806,7 @@ namespace _3MA.Controllers
             {
                 // TODO - remove() fails because products are in list, make list = null before deleting
                 ds.Packages.Remove(itemToDelete);
-                ds.SaveChanges();                               
+                ds.SaveChanges();
 
                 return true;
             }
@@ -623,6 +843,8 @@ namespace _3MA.Controllers
                 p.Completed = poorder.Completed;
                 p.LightUpgrade = poorder.LightUpgrade;
                 p.OrderPlaced = poorder.OrderPlaced;
+                p.Qty = poorder.Qty;
+                p.Room = poorder.Room;
 
                 p.AllProducts.Clear();
 
@@ -635,6 +857,20 @@ namespace _3MA.Controllers
                 ds.SaveChanges();
                 return mapper.Map<POrderBase>(p);
             }
+        }
+
+        public bool POrderAccList(string Id, Dictionary<int, int> accs)
+        {
+            // Attempt to fetch the object
+            //var p = ds.POrders.SingleOrDefault(o => o.Id == Id);
+            var p = POrderGetByCustId(Id);
+            if (p == null) { return false; }
+
+            p.IdAccList.Clear();
+            p.IdAccList = accs;
+
+            ds.SaveChanges();
+            return true;
         }
 
         public POrderBase POrderEditForm(POrderEditInfo poorder)
@@ -651,6 +887,48 @@ namespace _3MA.Controllers
                 ds.Entry(p).CurrentValues.SetValues(poorder);
                 ds.SaveChanges();
                 return mapper.Map<POrderBase>(p);
+            }
+        }
+
+        // ProductEditAccessory - receives parent SKU number and accessory ID, adds accessory to parent product
+        // pSKU - Parent SKU number, user to find parent SKU
+        // id - ID of accessory
+        public void ProductEditAccessory(string pSKU, int id)
+        {
+
+            var p = ds.Products.Include("AllAccessories").SingleOrDefault(o => o.MFG_SKU == pSKU);
+            if (p == null) { return; }
+
+            var a = ds.Accessories.Find(id);
+
+            if (!p.AllAccessories.Contains(a))
+            {
+                p.AllAccessories.Add(a);
+            }
+            try
+            {
+                ds.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (DbEntityValidationResult item in ex.EntityValidationErrors)
+                {
+                    // Get entry
+                    DbEntityEntry entry = item.Entry;
+                    string entityTypeName = entry.Entity.GetType().Name;
+
+                    // Display or log error messages
+                    foreach (DbValidationError subItem in item.ValidationErrors)
+                    {
+                        string message = string.Format("Error '{0}' occured in {1} at {2}",
+                            subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                        Console.WriteLine(message);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -738,7 +1016,7 @@ namespace _3MA.Controllers
             }
             return null;
         }
-        
+
 
     // Find
     public IEnumerable<ApplicationUserBase> FindUsers(string findString)
@@ -763,8 +1041,46 @@ namespace _3MA.Controllers
             return mapper.Map<IEnumerable<ApplicationUserBase>>(userList);
         }
 
+        public string GetUserRole(string id)
+        {
+            var user = UserManager.Users.SingleOrDefault(i => i.Id.Equals(id));
 
-        
+            if(user == null)
+            {
+                return null;
+            }
+
+            var appUser = mapper.Map<ApplicationUserBase>(user);
+
+            var userClaims = user.Claims.Where(c => c.ClaimType == ClaimTypes.Role).Select(roles => roles.ClaimValue).ToArray();
+
+            if (userClaims == null || userClaims.Count() == 0)
+            {
+                string[] str = { "User", "Customer" };
+                userClaims = str;
+            }
+
+            // Add role claims
+            appUser.Roles = userClaims;
+
+
+
+            if (appUser.Roles.Contains("Customer"))
+            {
+                return "Customer";
+            }
+            else if (appUser.Roles.Contains("Client"))
+            {
+                return "Client";
+            }
+            else if(appUser.Roles.Contains("Admin"))
+            {
+                return "Admin";
+            }
+
+            return null;
+        }
+
         // Add some programmatically-generated objects to the data store
         // Can write one method, or many methods - your decision
         // The important idea is that you check for existing data first
@@ -801,6 +1117,7 @@ namespace _3MA.Controllers
                 var stream = File.Open(path, FileMode.Open, FileAccess.Read);
 
                 // install-package exceldatareader
+                // Do NOT update ExcelDataReader, leave it at v2.1.2.3, updating it breaks code, have not found a way to fix it. This version works the way we want it to
                 IExcelDataReader reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
                 reader.IsFirstRowAsColumnNames = true;
                 DataSet sourceData = reader.AsDataSet();
@@ -813,12 +1130,34 @@ namespace _3MA.Controllers
                 var worksheet = sourceData.Tables[worksheetName];
 
                 // Convert it to a collection of the desired type
-                List<ProductAdd> items = worksheet.DataTableToList<ProductAdd>();       // DataTableToList -> helper class
+                List<ProductAdd> items = worksheet.DataTableToList<ProductAdd>();           // DataTableToList -> helper class
 
                 // Go through the collection, and add the items to the data context
                 foreach (var item in items)
                 {
                     ds.Products.Add(mapper.Map<Product>(item));
+                }
+
+                ds.SaveChanges();
+
+                // worksheet name
+                worksheetName = "Accessories";
+                worksheet = sourceData.Tables[worksheetName];
+
+                List<AccessoriesAdd> accs = worksheet.DataTableToList<AccessoriesAdd>();    // DataTableToList -> helper class
+
+                foreach (var acc in accs)
+                {
+
+                    var temp = mapper.Map<Accessories>(acc);
+                    ds.Accessories.Add(temp);
+                    string[] parent = acc.Parent_SKU.Split(',');
+
+                    foreach (var p in parent)
+                    {
+                        //ProductEditAccessory(p, acc.SKU);
+                        ProductEditAccessory(p, temp.Id);
+                    }
                 }
 
                 ds.SaveChanges();
@@ -920,6 +1259,82 @@ namespace _3MA.Controllers
             return done;
         }
 
+        public bool NewData()
+        {
+            var path = HttpContext.Current.Server.MapPath("~/App_Data/Catalogue.xlsx");
+
+            // using System.IO for File methods
+            var stream = File.Open(path, FileMode.Open, FileAccess.Read);
+
+            // install-package exceldatareader
+            // Do NOT update ExcelDataReader, leave it at v2.1.2.3, updating it breaks code, have not found a way to fix it. This version works the way we want it to
+            IExcelDataReader reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            reader.IsFirstRowAsColumnNames = true;
+            DataSet sourceData = reader.AsDataSet();
+            reader.Close();
+
+            // sourceData holds all the data from xlsx in memory
+
+            // worksheet name
+            string worksheetName = "New";
+            var worksheet = sourceData.Tables[worksheetName];
+
+            // Convert it to a collection of the desired type
+            List<ProductAdd> items = worksheet.DataTableToList<ProductAdd>();       // DataTableToList -> helper class
+
+            // Go through the collection, and add the items to the data context
+            foreach (var item in items)
+            {
+                ds.Products.Add(mapper.Map<Product>(item));
+            }
+
+            try
+            {
+                ds.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (DbEntityValidationResult item in ex.EntityValidationErrors)
+                {
+                    // Get entry
+                    DbEntityEntry entry = item.Entry;
+                    string entityTypeName = entry.Entity.GetType().Name;
+
+                    // Display or log error messages
+                    foreach (DbValidationError subItem in item.ValidationErrors)
+                    {
+                        string message = string.Format("Error '{0}' occured in {1} at {2}",
+                            subItem.ErrorMessage, entityTypeName, subItem.PropertyName);
+                        Console.WriteLine(message);
+                    }
+                }
+            }
+
+            // worksheet name
+            worksheetName = "New_Accessories";
+            worksheet = sourceData.Tables[worksheetName];
+
+            List<AccessoriesAdd> accs = worksheet.DataTableToList<AccessoriesAdd>();    // DataTableToList -> helper class
+
+            foreach (var acc in accs)
+            {
+
+                var temp = mapper.Map<Accessories>(acc);
+                ds.Accessories.Add(temp);
+                string[] parent = acc.Parent_SKU.Split(',');
+
+                foreach (var p in parent)
+                {
+                    //ProductEditAccessory(p, acc.SKU);
+                    ProductEditAccessory(p, temp.Id);
+                }
+            }
+
+            ds.SaveChanges();
+
+            return true;
+        }
+
         public bool RemoveData()
         {
             try
@@ -941,7 +1356,7 @@ namespace _3MA.Controllers
                     ds.Entry(p).State = System.Data.Entity.EntityState.Deleted;
                 }
                 ds.SaveChanges();
-                
+
 
                 return true;
             }

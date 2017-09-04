@@ -49,9 +49,9 @@
                 <b><span class="zinger">@Model.getMPhone</span></b>
             </td>
             <td>
-                House floor plan
+                @*House floor plan
                 <br />
-                <b><span class="zinger">@Model.Plan</span></b>
+                <b><span class="zinger">@Model.Plan</span></b>*@
             </td>
         </tr>
     </table>
@@ -62,15 +62,15 @@
 <h4>Select a Category</h4>
 <br />
 
-<dev class="tainer" onclick="onClickMain('Paint_order')">
+@*<dev class="tainer" onclick="onClickMain('Paint_order')">
     <img src="~/images/ico_paint.jpg" class="ext-ico" />
     <p class="ext">Paint</p>
-</dev>
+</dev>*@
 
-<dev class="tainer" onclick="onClickMain('Millwork_order')">
+@*<dev class="tainer" onclick="onClickMain('Millwork_order')">
     <img src="~/images/ico_millwork.jpg" class="ext-ico" />
     <p class="ext">Millwork</p>
-</dev>
+</dev>*@
 
 <dev class="tainer" onclick="onClickMain('Tiles_order')">
     <img src="~/images/ico_tiles.jpg" class="ext-ico" />
@@ -87,10 +87,10 @@
     <p class="ext">Lighting</p>
 </dev>
 
-<dev class="tainer" onclick="onClickMain('Door_order')">
+@*<dev class="tainer" onclick="onClickMain('Door_order')">
     <img src="~/images/ico_door.jpg" class="ext-ico" />
     <p class="ext">Trim/Door</p>
-</dev>
+</dev>*@
 
 <dev class="tainer" onclick="onClickMain('Plumbing_order')">
     <img src="~/images/ico_plumbing.jpg" class="ext-ico" />
@@ -104,6 +104,7 @@
 
  <br/>
 
+@*<img src="~/images/loadingAnimation.gif" id="loadingAnim" name="loadingAnim" hidden/>*@
 
 <div id="subCategory"></div>
 
@@ -142,7 +143,7 @@
     </div>
 
     @* Lighting upgrades *@
-    <div class="form-group">
+    @*<div class="form-group">
         @Html.LabelFor(model => model.LightUpgrade, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             <div class="checkbox">
@@ -150,8 +151,32 @@
                 @Html.ValidationMessageFor(model => model.LightUpgrade, "", new { @class = "text-danger" })
             </div>
         </div>
-    </div>
+    </div>*@
+
+    <br/>
     
+    <span><b>Light upgrades?</b></span>
+
+    @Html.CheckBox("LightUpgrade", Model.LightUpgrade)
+
+
+
+
+    @*<label style="border:none; padding-left: 50px;" onclick="updateCheck('lightUpgradeCheck')">
+        <input id="lightUpgradeCheck" type="checkbox" name="LightUpgrade" value="@Model.LightUpgrade" style="border:none;"/>
+        <img id="lightCheck" src="~/images/check-false.png" alt="Cant locate image" style="width:30px; height:30px; border:none;" />
+
+        @if (Model.LightUpgrade)
+        {
+            <img src="~/images/check-true.png" alt="Cant locate image" style="width:30px; height:30px; border:none;" />
+        }
+        else
+        {
+            <img src="~/images/check-false.png" alt="Cant locate image" style="width:30px; height:30px; border:none;" />
+        }
+    </label>*@
+    
+
     <a name="bottom"></a>
 
     <div class="form-group">
@@ -164,3 +189,19 @@
 <br/>
 
 <br/>
+
+<script type="text/javascript">
+    function updateCheck(check) {
+        var box = document.getElementById('lightUpgradeCheck').checked;
+        var img = document.getElementById('lightCheck');
+
+        if (box) {
+            img.src = "../images/check-true.png";
+        }
+        else {
+            img.src = "../images/check-false.png";
+        }
+    }
+
+
+</script>

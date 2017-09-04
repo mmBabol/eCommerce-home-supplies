@@ -7,8 +7,9 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create new account", "Roles", "Account" )
 </p>
+
 <table class="table">
     <tr>
         <th>
@@ -19,6 +20,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.email)
+        </th>
+        <th>
+            User roles
         </th>
         <th></th>
     </tr>
@@ -33,6 +37,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.allRoles)
         </td>
         <td>
             @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@

@@ -22,7 +22,7 @@ $("#buttonName").val("New text for button");
 //});
 
 window.onbeforeunload = function () {
-alert("fuckin hell wtf once again");
+//alert("fuckin hell wtf once again");
     $.ajax({
         type: "POST",
         url: "/Order/AjaxMethod",
@@ -41,7 +41,7 @@ alert("fuckin hell wtf once again");
     });
 };
 $(window).unload(function () {
-    alert("fuckin hell wtf once again");
+    //alert("fuckin hell wtf once again");
     $.ajax({
         type: "POST",
         url: "/Order/AjaxMethod",
