@@ -704,15 +704,27 @@ namespace _3MA.Controllers
             return PartialView("_Search", products);
         }
 
-        public ActionResult Select(int id)
+        // Select - Product details, user is able to add/remove the product from the shopping card
+        // id - The Id of the selected product, used to grab the product from the model
+        public ActionResult Select(int? id)
         {
+            var o = m.ProductGetById(id.GetValueOrDefault());
+            if (o == null)
+            {
+                return HttpNotFound();
+            }
 
+            //var order = m.POrderGetByCustId(User.Identity.GetUserId());
 
+            //if(order == null)
+            //{
+            //    return HttpNotFound();
+            //}
 
+            //ViewData["Selected_Product"] = o;
 
-            return View();
+            return View(o);
         }
-
 
         public ActionResult CreatePO()
         {

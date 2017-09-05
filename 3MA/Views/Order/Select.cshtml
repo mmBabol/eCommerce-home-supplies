@@ -1,0 +1,217 @@
+﻿@model _3MA.Controllers.ProductBase
+@using _3MA.Controllers
+
+@{
+    ViewBag.Title = "Select";
+    //var product = ViewData["Selected_Product"] as ProductBase;
+
+}
+
+<h3>@Model.MFG_SKU</h3>
+
+<div class="col-sm-12 col-md-6 col-lg-6">
+    <img src="@Model.Image" alt="Cant't find image" style="height:auto; width:auto;" />
+</div>
+
+<div class="col-sm-12 col-md-6 col-lg-6">
+    <h4>ProductBase</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MainCategory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MainCategory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubCategory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubCategory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PriceCategory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PriceCategory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MFG_SKU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MFG_SKU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Collection)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Collection)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Finish)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Finish)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Image)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Specs)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Specs)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DimW)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DimW)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DimTH)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DimTH)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DimL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DimL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PricePerSF)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PricePerSF)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SqFt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SqFt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Lbs)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lbs)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RHC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RHC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Core)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Core)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Strctr)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Strctr)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fnsh)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fnsh)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.getName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.getName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.getDim)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.getDim)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

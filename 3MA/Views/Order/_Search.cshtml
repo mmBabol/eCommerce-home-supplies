@@ -2,10 +2,9 @@
 
 <script src="~/Scripts/core.js"></script>
 
-@foreach(var prod in Model)
+@foreach (var prod in Model)
 {
-    <div class="product_container" >
-
+    <div class="product_container" onclick="location.href='@Url.Action("Select", "Order", new { id = prod.Id })'" >
         <img src=@prod.Image alt="Image missing" style="width:130px; height:130px; overflow:hidden;" />
 
         <p style="padding-top: 10px; font-size: 16px;">@prod.MFG_SKU</p>
