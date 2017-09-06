@@ -714,14 +714,32 @@ namespace _3MA.Controllers
                 return HttpNotFound();
             }
 
-            //var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
 
-            //if(order == null)
-            //{
-            //    return HttpNotFound();
-            //}
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
 
-            //ViewData["Selected_Product"] = o;
+            bool isChecked = false;
+            foreach(var product in order.AllProducts)
+            {
+                if(product.Id == id)
+                {
+                    isChecked = true;
+                    break;
+                }
+            }
+
+            foreach(var qty in order.Qty)
+            {
+
+
+
+            }
+
+            ViewData["isChecked"] = isChecked;
+            ViewData["Qty"] = o;
 
             return View(o);
         }

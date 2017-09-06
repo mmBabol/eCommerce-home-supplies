@@ -5,17 +5,53 @@
     ViewBag.Title = "Select";
     //var product = ViewData["Selected_Product"] as ProductBase;
 
+
+
+    // Viewbag get the Qty & isSelected from the controller
 }
+<h3 style="text-align: center;">@Model.getName</h3>
 
-<h3>@Model.MFG_SKU</h3>
+<hr />
 
-<div class="col-sm-12 col-md-6 col-lg-6">
-    <img src="@Model.Image" alt="Cant't find image" style="height:auto; width:auto;" />
+<div class="col-sm-12 col-md-5 col-lg-4">
+    <img src="@Model.Image" alt="Cant't find image" style="height:auto; width:100%; max-height: 350px; max-width: 350px; min-height: 250px; min-width: 250px;" />
+
+    <div style="width: 100%; text-align: right; max-width: 350px;">
+        <p style="font-size: 24px; padding-top: 20px; margin-right: 10%;">$<b>@Model.Price.ToString("0.00")</b></p>
+        <p style="font-size: 24px; padding-top: 20px; margin-right: 10%;"><b>@Model.getDim</b></p>
+    </div>
+
+
+
+    @{
+        var qtyVal = 0;
+    }
+
+    <b style="float: left; margin-left: 65px;">Quantity</b>
+    <br /><br />
+    <img src="~/images/arrow-left-double.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-right:5px;" @*onclick="QtyChange(@item.Id, -10)"*@ />
+    <img src="~/images/arrow-left-single.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" @*onclick="QtyChange(@item.Id, -1)"*@ />
+
+    <input type="text" id="textQty" style="float: left; max-width: 75px; width:auto; text-align:center" value="@qtyVal"/>
+
+    <img src="~/images/arrow-right-single.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" @*onclick="QtyChange(@item.Id, 1)"*@ />
+    <img src="~/images/arrow-right-double.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px;" @*onclick="QtyChange(@item.Id, 10)"*@ />
+
+
+
+
 </div>
 
-<div class="col-sm-12 col-md-6 col-lg-6">
-    <h4>ProductBase</h4>
-    <hr />
+@*<div class="col-lg-1 hidden-xs hidden-sm hidden-md"></div>*@
+
+<div class="col-sm-12 col-md-7 col-lg-8" style="margin-bottom: 200px;">
+    @if(Model.Specs != "")
+    {
+       <div style="width: 100%;">
+           <a href=@Model.Specs target="_blank" class="lookLikeButton" style="position: absolute; right: 5%;">View Specs</a>
+       </div>
+    }
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.MainCategory)
@@ -79,54 +115,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Image)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Specs)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Specs)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DimW)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DimW)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DimTH)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DimTH)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DimL)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DimL)
         </dd>
 
         <dt>
@@ -201,17 +189,5 @@
             @Html.DisplayFor(model => model.getName)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.getDim)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.getDim)
-        </dd>
-
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
