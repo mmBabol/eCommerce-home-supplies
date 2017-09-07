@@ -73,7 +73,38 @@ function ChangeColor(tableRow, highLight) {
 }
 
 // Update Qty value. Update value in view, send to controller to save in TempData
-function QtyChange(Id, val) {
+function QtyChange(id, val) {
+    var IdName = "textQty";
+    var total = 1;
+    var tbQty = document.getElementById(IdName).value;
+
+    alert(tbQty);
+
+    if (val == 0) {
+        total = tbQty.value;
+        if (total <= 0) {
+            document.getElementById(IdName).value = 1;
+        }
+    }
+    else {
+        total = parseInt(tbQty) + parseInt(val);
+        if (total < 0) {
+            total = 0;
+        }
+        document.getElementById(IdName).value = total;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/Order/ProductQtySave",
+        data: '{id: ' + Id + ', qty: ' + total + ' }',
+        //data: {id: id, qty: total },
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    });
+}
+
+function QtyChange_old(Id, val) {
     var IdName = "Qty" + Id;
     var total = 1;
     var saving = false;
@@ -104,7 +135,6 @@ function QtyChange(Id, val) {
             dataType: "json"
         });
     }
-
 }
 
 // Check to see if text field containing location is empty, if not, enable the 'Go' button and change border of text field to indicate that it is good for saving

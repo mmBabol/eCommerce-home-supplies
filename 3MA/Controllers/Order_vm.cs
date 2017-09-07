@@ -83,6 +83,10 @@ namespace _3MA.Controllers
         public ICollection<AccessoriesBase> AllAccessories { get; set; }
 
         public Dictionary<int, string> Room { get; set; }
+
+        // Qty - quantity of each item in the order
+        // 1st int - Id of product
+        // 2nd int - quantity of that product
         public Dictionary<int, int> Qty { get; set; }
         public string Street { get; set; }
         public string City { get; set; }

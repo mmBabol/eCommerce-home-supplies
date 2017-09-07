@@ -859,6 +859,20 @@ namespace _3MA.Controllers
             }
         }
 
+        public bool POrderUpdateQty(int Id, Dictionary<int, int> qty)
+        {
+            // Attempt to fetch the object
+            var p = ds.POrders.SingleOrDefault(o => o.Id == Id);
+            //var p = POrderGetByCustId(Id);
+            if (p == null) { return false; }
+
+            p.Qty.Clear();
+            p.Qty = qty;
+
+            ds.SaveChanges();
+            return true;
+        }
+
         public bool POrderAccList(string Id, Dictionary<int, int> accs)
         {
             // Attempt to fetch the object

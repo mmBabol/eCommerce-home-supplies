@@ -3,47 +3,40 @@
 
 @{
     ViewBag.Title = "Select";
-    //var product = ViewData["Selected_Product"] as ProductBase;
-
-
 
     // Viewbag get the Qty & isSelected from the controller
+    var isChecked = (bool)ViewData["isChecked"];
+    var qty = (int)ViewData["Qty"];
 }
 <h3 style="text-align: center;">@Model.getName</h3>
 
+<script src="~/Scripts/core.js"></script>
+
 <hr />
 
+    @*  Left column, includes image, price, dimension, quantity, and order button *@
 <div class="col-sm-12 col-md-5 col-lg-4">
     <img src="@Model.Image" alt="Cant't find image" style="height:auto; width:100%; max-height: 350px; max-width: 350px; min-height: 250px; min-width: 250px;" />
 
     <div style="width: 100%; text-align: right; max-width: 350px;">
         <p style="font-size: 24px; padding-top: 20px; margin-right: 10%;">$<b>@Model.Price.ToString("0.00")</b></p>
-        <p style="font-size: 24px; padding-top: 20px; margin-right: 10%;"><b>@Model.getDim</b></p>
+        <p style="font-size: 24px; margin-right: 10%;"><b>@Model.getDim</b></p>
     </div>
 
-
-
-    @{
-        var qtyVal = 0;
-    }
-
-    <b style="float: left; margin-left: 65px;">Quantity</b>
     <br /><br />
-    <img src="~/images/arrow-left-double.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-right:5px;" @*onclick="QtyChange(@item.Id, -10)"*@ />
-    <img src="~/images/arrow-left-single.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" @*onclick="QtyChange(@item.Id, -1)"*@ />
+    <img src="~/images/arrow-left-double.png" class="img-border" alt="Left" style="width:auto; height:25px; float:left; margin-right:5px;" onclick="QtyChange(@Model.Id, -10)" />
+    <img src="~/images/arrow-left-single.png" class="img-border" alt="Left" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, -1)" />
 
-    <input type="text" id="textQty" style="float: left; max-width: 75px; width:auto; text-align:center" value="@qtyVal"/>
+    <input type="text" id="textQty" name="textQty" style="float: left; max-width: 75px; width:auto; text-align:center" value="@qty"/>
 
-    <img src="~/images/arrow-right-single.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" @*onclick="QtyChange(@item.Id, 1)"*@ />
-    <img src="~/images/arrow-right-double.png" class="img-border" alt="I fail" style="width:auto; height:25px; float:left; margin-left:5px;" @*onclick="QtyChange(@item.Id, 10)"*@ />
-
-
-
+    <img src="~/images/arrow-right-single.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, 1)" />
+    <img src="~/images/arrow-right-double.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px;" onclick="QtyChange(@Model.Id, 10)" />
 
 </div>
 
 @*<div class="col-lg-1 hidden-xs hidden-sm hidden-md"></div>*@
 
+    @*  Right column, includes product details  *@
 <div class="col-sm-12 col-md-7 col-lg-8" style="margin-bottom: 200px;">
     @if(Model.Specs != "")
     {
@@ -179,14 +172,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.Fnsh)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.getName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.getName)
         </dd>
 
     </dl>

@@ -416,7 +416,7 @@ namespace _3MA.Controllers
         // id - the ID of the product
         // qty - quantity of this product
         [HttpPost]
-        public ActionResult ProductQtySave(int id, int qty)
+        public ActionResult ProductQtySave_old(int id, int qty)
         {
             Dictionary<int, int> qtys= TempData["ProductsQtyList"] as Dictionary<int, int>;
             int dict;
@@ -722,6 +722,7 @@ namespace _3MA.Controllers
             }
 
             bool isChecked = false;
+            int quantity = 0;
             foreach(var product in order.AllProducts)
             {
                 if(product.Id == id)
@@ -731,17 +732,47 @@ namespace _3MA.Controllers
                 }
             }
 
-            foreach(var qty in order.Qty)
+            if (isChecked)
             {
-
-
-
+                foreach(var qty in order.Qty)
+                {
+                    if(qty.Key == id)
+                    {
+                        quantity = qty.Value;
+                    }
+                }
             }
 
             ViewData["isChecked"] = isChecked;
-            ViewData["Qty"] = o;
+            ViewData["Qty"] = quantity;
 
             return View(o);
+        }
+
+        // ProductQtySave
+        // receive the product id and quantity, add it into TempData
+        // id - the ID of the product
+        // qty - quantity of this product
+        [HttpPost]
+        public ActionResult ProductQtySave(int id, int qty)
+        {
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            var qtys = order.Qty;
+            int dict;
+
+            // Substitute for ContainsKey, looks for key [id], if not found, it will output [dict]
+            if (!qtys.TryGetValue(id, out dict))
+            {
+                qtys.Add(id, qty);
+            }
+            else
+            {
+                qtys[id] = qty;
+            }
+
+            m.POrderUpdateQty(order.Id, qtys);
+
+            return null;
         }
 
         public ActionResult CreatePO()

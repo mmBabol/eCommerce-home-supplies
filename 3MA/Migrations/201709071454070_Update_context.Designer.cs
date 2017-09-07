@@ -7,13 +7,13 @@ namespace _3MA.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Update_model : IMigrationMetadata
+    public sealed partial class Update_context : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Update_model));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Update_context));
         
         string IMigrationMetadata.Id
         {
-            get { return "201708301355147_Update_model"; }
+            get { return "201709071454070_Update_context"; }
         }
         
         string IMigrationMetadata.Source
