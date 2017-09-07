@@ -757,20 +757,29 @@ namespace _3MA.Controllers
         public ActionResult ProductQtySave(int id, int qty)
         {
             var order = m.POrderGetByCustId(User.Identity.GetUserId());
-            var qtys = order.Qty;
             int dict;
 
             // Substitute for ContainsKey, looks for key [id], if not found, it will output [dict]
-            if (!qtys.TryGetValue(id, out dict))
+            if (!order.Qty.TryGetValue(id, out dict))
             {
-                qtys.Add(id, qty);
+                order.Qty.Add(id, qty);
             }
             else
             {
-                qtys[id] = qty;
+                order.Qty[id] = qty;
             }
 
-            m.POrderUpdateQty(order.Id, qtys);
+            var result = m.POrderUpdateQtys(order);
+
+            return null;
+        }
+
+        [HttpPost]
+        public ActionResult AddToCart(int id, bool isChecked)
+        {
+            var product = m.ProductGetById(id);
+
+            var result = m.POrderUpdateCart(User.Identity.GetUserId(), product, isChecked); 
 
             return null;
         }

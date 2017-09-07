@@ -859,17 +859,59 @@ namespace _3MA.Controllers
             }
         }
 
-        public bool POrderUpdateQty(int Id, Dictionary<int, int> qty)
+        //public POrderBase POrderUpdateQty(int Id, Dictionary<int, int> qty)
+        //{
+        //    // Attempt to fetch the object
+        //    var p = ds.POrders.SingleOrDefault(o => o.Id == Id);
+        //    //if (p == null) { return false; }
+
+        //    var pooping = mapper.Map<POrderBase>(p);
+
+        //    p.Qty.Clear();
+        //    p.Qty = qty;
+
+        //    //ds.Entry(p).State = EntityState.Modified;
+        //    //ds.POrders.SingleOrDefault(o => o.Id == Id).Qty = qty;
+        //    //var poop = mapper.Map<POrderBase>(p);
+
+        //    ds.SaveChanges();
+        //    return mapper.Map<POrderBase>(p);
+        //}
+
+        public bool POrderUpdateQtys(POrderBase po)
         {
             // Attempt to fetch the object
-            var p = ds.POrders.SingleOrDefault(o => o.Id == Id);
-            //var p = POrderGetByCustId(Id);
-            if (p == null) { return false; }
+            var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.Id == po.Id);
+            if (p == null)
+            {
+                return false;
+            }
+            p.Qty = po.Qty;
+            // add product
 
-            p.Qty.Clear();
-            p.Qty = qty;
 
             ds.SaveChanges();
+            //return mapper.Map<POrderBase>(p);
+            return true;
+        }
+
+        public bool POrderUpdateCart(string id, ProductBase product, bool addToCart)
+        {
+            var o = POrderGetByCustId(id);
+            if(o == null)
+            {
+                return false;
+            }
+            
+            if (addToCart)
+            {
+                o.AllProducts.Add(product);
+            }
+            else
+            {
+                o.AllProducts.Remove(product);
+            }
+
             return true;
         }
 

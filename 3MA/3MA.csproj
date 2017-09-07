@@ -321,6 +321,9 @@
     <Content Include="images\arrow-right-double.png" />
     <Content Include="images\arrow-right-single.png" />
     <Content Include="images\arrow-up.png" />
+    <Content Include="images\cart-in.png" />
+    <Content Include="images\cart-out.png" />
+    <Content Include="images\cart.png" />
     <Content Include="images\check-false.png" />
     <Content Include="images\check-true.png" />
     <Content Include="images\checked.png" />

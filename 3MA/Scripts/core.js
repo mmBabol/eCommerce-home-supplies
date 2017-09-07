@@ -78,8 +78,6 @@ function QtyChange(id, val) {
     var total = 1;
     var tbQty = document.getElementById(IdName).value;
 
-    alert(tbQty);
-
     if (val == 0) {
         total = tbQty.value;
         if (total <= 0) {
@@ -97,44 +95,31 @@ function QtyChange(id, val) {
     $.ajax({
         type: "POST",
         url: "/Order/ProductQtySave",
-        data: '{id: ' + Id + ', qty: ' + total + ' }',
+        data: '{id: ' + id + ', qty: ' + total + ' }',
         //data: {id: id, qty: total },
         contentType: "application/json; charset=utf-8",
         dataType: "json"
     });
 }
 
-function QtyChange_old(Id, val) {
-    var IdName = "Qty" + Id;
-    var total = 1;
-    var saving = false;
-
-    if (val == 0) {
-        total = document.getElementById(IdName).value;
-        if (total <= 0) {
-            document.getElementById(IdName).value = 1;
-            saving = true;
-        }
+function clickAddToCart(id) {
+    var isChecked = document.getElementById("hiddenP").innerHTML;
+    if (isChecked == "True") {
+        isChecked = "False";
     }
     else {
-        total = parseInt(document.getElementById(IdName).value) + parseInt(val);
-        if (total < 0) {
-            total = 0;
-        }
-        document.getElementById(IdName).value = total;
-        saving = true;
+        isChecked = "True";
     }
+    document.getElementById("hiddenP").innerHTML = isChecked;
 
-    if (saving) {
-        $.ajax({
-            type: "POST",
-            url: "/Order/ProductQtySave",
-            data: '{id: ' + Id + ', qty: ' + total + ' }',
-            //data: {id: id, qty: total },
-            contentType: "application/json; charset=utf-8",
-            dataType: "json"
-        });
-    }
+    $.ajax({
+        type: "POST",
+        url: "/Order/AddToCart",
+        data: '{id: ' + id + ', isChecked: ' + isChecked + ' }',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    });
+
 }
 
 // Check to see if text field containing location is empty, if not, enable the 'Go' button and change border of text field to indicate that it is good for saving
