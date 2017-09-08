@@ -912,6 +912,10 @@ namespace _3MA.Controllers
                 o.AllProducts.Remove(product);
             }
 
+            o.Suite = 555;
+
+            ds.SaveChanges();
+
             return true;
         }
 

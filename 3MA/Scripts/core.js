@@ -115,7 +115,7 @@ function clickAddToCart(id) {
     $.ajax({
         type: "POST",
         url: "/Order/AddToCart",
-        data: '{id: ' + id + ', isChecked: ' + isChecked + ' }',
+        data: '{id: ' + parseInt(id) + ', isChecked: ' + JSON.stringify(isChecked) + ' }',
         contentType: "application/json; charset=utf-8",
         dataType: "json"
     });

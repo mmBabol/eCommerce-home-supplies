@@ -26,16 +26,11 @@
         <img src="~/images/arrow-left-double.png" class="img-border" alt="Left" style="width:auto; height:25px; float:left; margin-right:5px;" onclick="QtyChange(@Model.Id, -10)" />
         <img src="~/images/arrow-left-single.png" class="img-border" alt="Left" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, -1)" />
 
-        <input type="text" id="textQty" name="textQty" style="float: left; max-width: 75px; width:auto; text-align:center" value="@qty" />
+        <input type="text" id="textQty" name="textQty" style="float: left; max-width: 75px; width:auto; text-align:center" value="@qty" onformchange="QtyChange(@Model.Id, 0)" />
 
         <img src="~/images/arrow-right-single.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, 1)" />
         <img src="~/images/arrow-right-double.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px;" onclick="QtyChange(@Model.Id, 10)" />
     </div>
-
-
-    @{
-        var imgSrc = (isChecked) ? "~/images/cart-in.png" : "~/images/cart-out.png";
-    }
 
     <div style="width: 100%; padding-top: 25px;">
         <div style="width: 160px; height: 30px; background-color: #00aaaa; border: solid 1px #00FFFF; border-radius: 3px; cursor: pointer;" onclick="clickAddToCart(@Model.Id)">    @* #0000FF *@

@@ -769,17 +769,30 @@ namespace _3MA.Controllers
                 order.Qty[id] = qty;
             }
 
-            var result = m.POrderUpdateQtys(order);
+            //var result = m.POrderUpdateQtys(order);
+            var result = m.POrderEdit(order);
 
             return null;
         }
 
         [HttpPost]
-        public ActionResult AddToCart(int id, bool isChecked)
+        //[Route("Order/AddToCart")]
+        public ActionResult AddToCart(int id, string isChecked)
         {
             var product = m.ProductGetById(id);
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
 
-            var result = m.POrderUpdateCart(User.Identity.GetUserId(), product, isChecked); 
+            if(isChecked == "True")
+            {
+                order.AllProducts.Add(product);
+            }
+            else
+            {
+                order.AllProducts.Remove(product);
+            }
+            var result = m.POrderEdit(order);
+
+            //var result = m.POrderUpdateCart(User.Identity.GetUserId(), product, (isChecked == "True") ? true : false); 
 
             return null;
         }
