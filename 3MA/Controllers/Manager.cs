@@ -6,16 +6,15 @@ using System.Web;
 using AutoMapper;
 using _3MA.Models;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 using System.IO;
 using Excel;
 using System.Data;
 using System.Reflection;
 using System.Data.Entity.Validation;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity;
 
 namespace _3MA.Controllers
 {
@@ -67,6 +66,8 @@ namespace _3MA.Controllers
                 _userManager = value;
             }
         }
+
+        public EntityState En { get; private set; }
 
         public Manager()
         {
@@ -853,8 +854,26 @@ namespace _3MA.Controllers
                     var m = ds.Products.Find(poo);
                     p.AllProducts.Add(m);
                 }
+                //foreach (var pp in poorder.AllProducts)
+                //{
+                //    p.AllProducts(pp);
+                //}
 
+                //ds.Entry(p).CurrentValues.SetValues(poorder);
+                //ds.Entry(p).State = EntityState.Modified;
+                //ds.Entry(poorder).State = EntityState.Modified;
+
+                //ds.Attach(account);
+                //ObjectStateEntry entry = context.ObjectStateManager.GetObjectStateEntry(account);
+                //entry.SetModified();
+
+                db.Students.Entry(newuser).State = EntityState.Added;
+                db.Students.SaveChanges();
+
+                //ds.POrders.SaveChanges();
                 ds.SaveChanges();
+
+                //ds.SaveChanges();
                 return mapper.Map<POrderBase>(p);
             }
         }
@@ -911,8 +930,6 @@ namespace _3MA.Controllers
             {
                 o.AllProducts.Remove(product);
             }
-
-            o.Suite = 555;
 
             ds.SaveChanges();
 

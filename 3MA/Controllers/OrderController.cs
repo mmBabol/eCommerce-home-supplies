@@ -784,11 +784,13 @@ namespace _3MA.Controllers
 
             if(isChecked == "True")
             {
-                order.AllProducts.Add(product);
+                //order.AllProducts.Add(product);
+                order.IdProductList.Add(id);
             }
             else
             {
-                order.AllProducts.Remove(product);
+                //order.AllProducts.Remove(product);
+                order.IdProductList.Remove(id);
             }
             var result = m.POrderEdit(order);
 
