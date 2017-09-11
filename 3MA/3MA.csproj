@@ -493,6 +493,10 @@
     <Content Include="Views\Order\Flooring.cshtml" />
     <Content Include="Views\Order\_Search.cshtml" />
     <Content Include="Views\Order\Select.cshtml" />
+    <Content Include="Views\Order\Tiles.cshtml" />
+    <Content Include="Views\Order\Appliances.cshtml" />
+    <Content Include="Views\Order\Lighting.cshtml" />
+    <Content Include="Views\Order\Fixtures.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

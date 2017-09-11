@@ -114,56 +114,11 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Home", "Index", "Home" )</li>*@
-                    <li>@Html.ActionLink("Products", "Index", "Product")</li>
-                    @*<li>@Html.ActionLink("Packages", "Index", "Package")</li>*@
-                    @if (Request.IsAuthenticated)
-                    {
-                        //if (User.IsInRole("Admin"))
-                        if (userAccount.IsAdmin)
-                        {
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    Accounts <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-
-
-                                    <li>@Html.ActionLink("Create", "Roles", "Account")</li>
-                                    <li>@Html.ActionLink("Account list", "Index", "AccountManager")</li>
-                                    @*<li>@Html.ActionLink("Find account", "UserFinder", "AccountManager")</li>*@
-                                </ul>
-                            </li>
-                            <li>@Html.ActionLink("Projects", "Index", "Project")</li>
-                        }
-                                    @*<li>@Html.ActionLink("Order", "Order", "Package")</li>*@
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Order <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Packages", "Create", "Order")</li>
-                                @*<li>@Html.ActionLink("Products", "PCreate", "Order")</li>*@
-                                @if (User.IsInRole("Customer"))
-                                {
-                                    <li>@Html.ActionLink("Products", "Products_Order", "Order")</li>
-                                }
-                                else if (User.IsInRole("Admin") || User.IsInRole("Client"))
-                                {
-                                    <li>@Html.ActionLink("Products", "getEndUser", "Order")</li>
-                                    <li>@Html.ActionLink("All orders", "Index", "Order")</li>
-                                }
-                            </ul>
-                        </li>
-                        if (User.IsInRole("Customer"))
-                        {
-                        @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })*@
-                            <li>@Html.ActionLink("Edit account", "Edit", "Order")</li>
-                        }
-                        @*<li>@Html.ActionLink("Create", "Roles", "Account")</li>*@
-                    }
-                    <li>@Html.ActionLink("V2.0", "Home", "Order")</li>
+                    <li>@Html.ActionLink("Appliances", "Appliances_Main", "Order")</li>
+                    <li>@Html.ActionLink("Fixtures", "Fixtures_Main", "Order")</li>
+                    <li>@Html.ActionLink("Flooring", "Flooring_Main", "Order")</li>
+                    <li>@Html.ActionLink("Lighting", "Lighting_Main", "Order")</li>
+                    <li>@Html.ActionLink("Tiles", "Tiles_Main", "Order")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -182,3 +137,6 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
+
+

@@ -439,8 +439,38 @@ namespace _3MA.Controllers
             // Attempt to fetch the object
             var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.customerID == ID);
 
+            foreach(var product in p.AllProducts)
+            {
+                p.IdProductList.Add(product.Id);
+            }
+
             // Return the result, null if not found
             return (p == null) ? null : mapper.Map<POrderBase>(p);
+        }
+
+        public int POrderGetOrderID(string ID)
+        {
+            // Attempt to fetch the object
+            var p = ds.POrders.SingleOrDefault(o => o.customerID == ID);
+
+            // Return the result, null if not found
+            return (p == null) ? 0 : p.Id;
+        }
+
+        public POrderProducts POrderGetProducts(string ID)
+        {
+            // Attempt to fetch the object
+            var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.customerID == ID);
+
+            //ISSUE HERE
+
+            POrderProducts temp = new POrderProducts();
+            temp.Id = p.Id;
+            //temp.AllProducts = p.AllProducts.ToList();
+
+            temp.Qty = p.Qty;
+
+            return temp;
         }
 
         public POrderBase POrderGetById(int id)
@@ -846,6 +876,7 @@ namespace _3MA.Controllers
                 p.OrderPlaced = poorder.OrderPlaced;
                 p.Qty = poorder.Qty;
                 p.Room = poorder.Room;
+                p.Suite = poorder.Suite;
 
                 p.AllProducts.Clear();
 
@@ -866,9 +897,7 @@ namespace _3MA.Controllers
                 //ds.Attach(account);
                 //ObjectStateEntry entry = context.ObjectStateManager.GetObjectStateEntry(account);
                 //entry.SetModified();
-
-                db.Students.Entry(newuser).State = EntityState.Added;
-                db.Students.SaveChanges();
+                
 
                 //ds.POrders.SaveChanges();
                 ds.SaveChanges();
@@ -896,6 +925,42 @@ namespace _3MA.Controllers
         //    ds.SaveChanges();
         //    return mapper.Map<POrderBase>(p);
         //}
+
+        public bool POrderUpdateLists(POrderProducts porder)
+        {
+            // Attempt to fetch the object
+            //var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.Id == porder.Id);
+            var po = ds.POrders.Find(porder.Id);
+            var p = ds.POrders
+                .Include("AllProducts")
+                .SingleOrDefault(o => o.Id == porder.Id);
+
+            if (p == null)
+            {
+                return false;
+            }
+            ds.Entry(p).CurrentValues.SetValues(porder);
+
+
+            // Update the object with the incoming values
+
+            // First, clear out the existing collection
+            p.AllProducts.Clear();
+
+            // Then, go through the incoming items
+            // For each one, add to the fetched object's collection
+            foreach (var item in porder.IdProductList)
+            {
+                var a = ds.Products.Find(item);
+                p.AllProducts.Add(a);
+            }
+
+
+
+            ds.SaveChanges();
+            //return mapper.Map<POrderBase>(p);
+            return true;
+        }
 
         public bool POrderUpdateQtys(POrderBase po)
         {

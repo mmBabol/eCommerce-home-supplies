@@ -643,6 +643,7 @@ namespace _3MA.Controllers
 
         public ActionResult Home()
         {
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
             return View();
         }
 
@@ -650,6 +651,7 @@ namespace _3MA.Controllers
         [Route("Flooring/")]
         public ActionResult Flooring_Main()
         {
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
             var search = new ProductSearchForm();
 
             search.dimX = m.getAllDimX("Flooring");
@@ -662,6 +664,138 @@ namespace _3MA.Controllers
             search.Filter.Add("Laminate", false);
 
             return View("Flooring", search);
+        }
+
+        // Tles_Main - Open a tiles search page
+        [Route("Tiles/")]
+        public ActionResult Tiles_Main()
+        {
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            var search = new ProductSearchForm();
+
+            search.dimX = m.getAllDimX("Tiles");
+            search.dimY = m.getAllDimY("Tiles");
+            search.dimZ = m.getAllDimZ("Tiles");
+            search.PriceCat = m.getAllPriceCat("Tiles");
+
+            search.Filter.Add("All", true);
+            search.Filter.Add("Ceramics & Porcelain", false);
+            search.Filter.Add("Laminate", false);
+
+            return View("Tiles", search);
+        }
+
+        // Tles_Main - Open a tiles search page
+        [Route("Lighting/")]
+        public ActionResult Lighting_Main()
+        {
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            var search = new ProductSearchForm();
+
+            search.dimX = m.getAllDimX("Lighting");
+            search.dimY = m.getAllDimY("Lighting");
+            search.dimZ = m.getAllDimZ("Lighting");
+            search.PriceCat = m.getAllPriceCat("Lighting");
+
+            search.Filter.Add("All", true);
+            search.Filter.Add("Foyer Lights", false);
+            search.Filter.Add("Pendants", false);
+            search.Filter.Add("Chandeliers", false);
+            search.Filter.Add("Light", false);
+
+            //Foyer Lights
+            //Wall Sconce
+            //Flush Mounts
+            //Vanity Light
+            //Pendants
+            //Semi Flush Mounts
+            //Mini Pendants
+            //Track Light
+            //Outdoor Light
+            //Chandeliers
+            //Island / Linear
+            //Portables
+            //Light Linear
+            //Step Light
+            //Hallway Light
+            //Wall Mount
+            //---------------------------
+            //Foyer Lights
+            //Wall Sconce
+            //Flush Mounts -Hallway Light
+            //Flush Mounts
+            //Vanity Light
+            //Pendants
+            //Semi Flush Mounts
+            //Mini Pendants
+            //Wall Scone
+            //Track Light
+            //Foyer Lights - Hallway Light
+            //Flush Mounts - Outdoor Light
+            //Outdoor Light - Wall Sconce
+            //Outdoor Light
+            //Hallway Light - Mini Pendants
+            //Hallway Light - Semi Flush Mounts
+            //Chandeliers
+            //Foyer Lights - Pendands
+            //Island / Linear
+            //Portables
+            //Chandeliers - Semi Flush Mounts
+            //Hallway Light -Pendants
+            //Outdoor Light -Pendants
+            //Light Linear
+            //Step Light
+            //Hallway Light
+            //Mini Pendants -Pendants
+            //Wall Mount
+            //Basic LED
+            //Basic LED
+            //Upgraded LED
+            //Upgraded LED
+            //High End LED
+            //High End LED
+            //LED Undercabinet
+
+
+            return View("Lighting", search);
+        }
+
+        // Fixtures_Main - Open a tiles search page
+        [Route("Fixtures/")]
+        public ActionResult Fixtures_Main()
+        {
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            var search = new ProductSearchForm();
+
+            search.dimX = m.getAllDimX("Fixtures");
+            search.dimY = m.getAllDimY("Fixtures");
+            search.dimZ = m.getAllDimZ("Fixtures");
+            search.PriceCat = m.getAllPriceCat("Fixtures");
+
+            search.Filter.Add("All", true);
+            search.Filter.Add("Sink", false);
+            search.Filter.Add("Shower Niche", false);
+
+            return View("Fixtures", search);
+        }
+
+        // Appliances_Main - Open a tiles search page
+        [Route("Appliances/")]
+        public ActionResult Appliances_Main()
+        {
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            var search = new ProductSearchForm();
+
+            search.dimX = m.getAllDimX("Appliances");
+            search.dimY = m.getAllDimY("Appliances");
+            search.dimZ = m.getAllDimZ("Appliances");
+            search.PriceCat = m.getAllPriceCat("Appliances");
+
+            search.Filter.Add("All", true);
+            //search.Filter.Add("Ceramics & Porcelain", false);
+            //search.Filter.Add("Laminate", false);
+
+            return View("Appliances", search);
         }
 
         // Search - Search for specific products and return list of the results
@@ -681,6 +815,7 @@ namespace _3MA.Controllers
         [Route("search/{cat}/{col}/{nam}/{x}/{y}/{z}/{price}/{a}/{b}/{c}/{d}/{e}")]
         public ActionResult Search(string cat, string col, string nam, string x, string y, string z, string price, string a, string b, string c, string d, string e)
         {
+            var order = m.POrderGetByCustId(User.Identity.GetUserId());
             List<string> filterCat = new List<string>();
             if (a != "0") { filterCat.Add(a); }
             if (b != "0") { filterCat.Add(b); }
@@ -768,6 +903,7 @@ namespace _3MA.Controllers
             {
                 order.Qty[id] = qty;
             }
+            order.Suite = 911;
 
             //var result = m.POrderUpdateQtys(order);
             var result = m.POrderEdit(order);
@@ -776,25 +912,37 @@ namespace _3MA.Controllers
         }
 
         [HttpPost]
-        //[Route("Order/AddToCart")]
         public ActionResult AddToCart(int id, string isChecked)
         {
-            var product = m.ProductGetById(id);
+            //var product = m.ProductGetById(id);
             var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            //int orderID = m.POrderGetOrderID(User.Identity.GetUserId());
 
-            if(isChecked == "True")
+            if(order == null)
+            {
+                return null;
+            }
+
+            //POrderProducts order = new POrderProducts();
+            //order.Id = orderID;
+
+            if (isChecked == "True")
             {
                 //order.AllProducts.Add(product);
                 order.IdProductList.Add(id);
+                //order.IdProductList.Add(id);
             }
             else
             {
                 //order.AllProducts.Remove(product);
                 order.IdProductList.Remove(id);
+                //order.IdProductList.Remove(id);
             }
-            var result = m.POrderEdit(order);
+            //var result = m.POrderUpdateLists(order);
 
             //var result = m.POrderUpdateCart(User.Identity.GetUserId(), product, (isChecked == "True") ? true : false); 
+
+            var result = m.POrderEdit(order);
 
             return null;
         }

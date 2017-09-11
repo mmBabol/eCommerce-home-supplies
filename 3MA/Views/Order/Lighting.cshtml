@@ -1,0 +1,100 @@
+﻿@model _3MA.Controllers.ProductSearchForm
+@using _3MA.Extensions
+
+<hr/>
+
+<script src="~/Scripts/core.js"></script>
+
+<div class="container">
+    <div class="col-sm-10 col-md-6">
+        <br /><br />
+        <label class="search-label"><b>Name of product</b></label>
+        <input type="text" id="searchName" name="searchName" style="width: 200px;" />
+
+        <br /><br />
+        <label class="search-label"><b>Colour of prouct</b></label>
+        <input type="text" id="searchColour" name="searchColour" style="width: 200px;" />
+
+        <br /><br />
+
+        <label class="search-label"><b>Price Category</b></label>
+        <select name="PriceList" id="PriceList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var p in Model.PriceCat)
+            {
+                <option>@p</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-sm-10 col-md-6">
+        <br /><br />
+        <label class="search-label"><b>Dimension X</b></label>
+        <select name="dimXList" id="dimXList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var x in Model.dimX)
+            {
+                <option>@x</option>
+            }
+        </select>
+
+        <br /><br />
+        <label class="search-label"><b>Dimension Y</b></label>
+        <select name="dimYList" id="dimYList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var y in Model.dimY)
+            {
+                <option>@y</option>
+            }
+        </select>
+
+        <br /><br />
+        <label class="search-label"><b>Dimension Z</b></label>
+        <select name="dimZList" id="dimZList" style="width: 200px; height: 30px;">
+            <option>-</option>
+            @foreach (var z in Model.dimZ)
+            {
+                <option>@z</option>
+            }
+        </select>
+
+        <br /><br />
+
+
+        @if (Model.Filter.Count() > 0)
+        {
+            int i = 0;
+            foreach (var check in Model.Filter)
+            {
+                string cb = "cb-" + i;
+
+                if (check.Value)
+                {
+                    <input id="@i" type="checkbox" name=@check.Key onclick="onCheckClick(@Model.Filter.Count(), @i)" title="@check.Key" checked />
+                    @check.Key
+                }
+                else
+                {
+                    <input id="@i" type="checkbox" name=@check.Key onclick="onCheckClick(@Model.Filter.Count(), @i)" title="@check.Key" />
+                    @check.Key
+                }
+                i++;
+                <br />
+            }
+            <p id="myCount" hidden>@Model.Filter.Count()</p>
+        }
+
+    </div>
+        @*ATTENTION - to add more search fields into lighting, add all necessary forms up above,
+            then pass all the values to the filterProduct JS function. Pass the arguments along with '/product/search/'.
+            In the controller, add the extra argument inside the routing attribute. Make sure that the name is the exact
+            same as the argument.*@
+    <div class="col-sm-10 col-md-8">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" value="Search" class="btn btn-primary" onclick="onFilterProduct('search', 'Lighting')" />
+        </div>
+    </div>
+
+</div>
+
+<div id="productList"></div>

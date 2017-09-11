@@ -301,6 +301,9 @@ namespace _3MA.Controllers
             Qty = new Dictionary<int, int>();
         }
 
+        [Key]
+        public int Id { get; set; }
+
         public ICollection<ProductBase> AllProducts { get; set; }
         public ICollection<int> IdProductList { get; set; }
 
