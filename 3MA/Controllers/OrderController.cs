@@ -643,7 +643,6 @@ namespace _3MA.Controllers
 
         public ActionResult Home()
         {
-            var order = m.POrderGetByCustId(User.Identity.GetUserId());
             return View();
         }
 
@@ -651,7 +650,7 @@ namespace _3MA.Controllers
         [Route("Flooring/")]
         public ActionResult Flooring_Main()
         {
-            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            ViewData["TotalPrice"] = m.POrderGetPriceByCustId(User.Identity.GetUserId());
             var search = new ProductSearchForm();
 
             search.dimX = m.getAllDimX("Flooring");
@@ -670,13 +669,16 @@ namespace _3MA.Controllers
         [Route("Tiles/")]
         public ActionResult Tiles_Main()
         {
-            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            //var total = m.POrderGetPriceByCustId(User.Identity.GetUserId());
+
+            ViewData["TotalPrice"] = m.POrderGetPriceByCustId(User.Identity.GetUserId());
+
             var search = new ProductSearchForm();
 
-            search.dimX = m.getAllDimX("Tiles");
-            search.dimY = m.getAllDimY("Tiles");
-            search.dimZ = m.getAllDimZ("Tiles");
-            search.PriceCat = m.getAllPriceCat("Tiles");
+            search.dimX = m.getAllDimX("Tile");
+            search.dimY = m.getAllDimY("Tile");
+            search.dimZ = m.getAllDimZ("Tile");
+            search.PriceCat = m.getAllPriceCat("Tile");
 
             search.Filter.Add("All", true);
             search.Filter.Add("Ceramics & Porcelain", false);
@@ -689,7 +691,7 @@ namespace _3MA.Controllers
         [Route("Lighting/")]
         public ActionResult Lighting_Main()
         {
-            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            ViewData["TotalPrice"] = m.POrderGetPriceByCustId(User.Identity.GetUserId());
             var search = new ProductSearchForm();
 
             search.dimX = m.getAllDimX("Lighting");
@@ -764,13 +766,13 @@ namespace _3MA.Controllers
         [Route("Fixtures/")]
         public ActionResult Fixtures_Main()
         {
-            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            ViewData["TotalPrice"] = m.POrderGetPriceByCustId(User.Identity.GetUserId());
             var search = new ProductSearchForm();
 
-            search.dimX = m.getAllDimX("Fixtures");
-            search.dimY = m.getAllDimY("Fixtures");
-            search.dimZ = m.getAllDimZ("Fixtures");
-            search.PriceCat = m.getAllPriceCat("Fixtures");
+            search.dimX = m.getAllDimX("Plumbing");
+            search.dimY = m.getAllDimY("Plumbing");
+            search.dimZ = m.getAllDimZ("Plumbing");
+            search.PriceCat = m.getAllPriceCat("Plumbing");
 
             search.Filter.Add("All", true);
             search.Filter.Add("Sink", false);
@@ -783,7 +785,7 @@ namespace _3MA.Controllers
         [Route("Appliances/")]
         public ActionResult Appliances_Main()
         {
-            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            ViewData["TotalPrice"] = m.POrderGetPriceByCustId(User.Identity.GetUserId());
             var search = new ProductSearchForm();
 
             search.dimX = m.getAllDimX("Appliances");
@@ -815,7 +817,8 @@ namespace _3MA.Controllers
         [Route("search/{cat}/{col}/{nam}/{x}/{y}/{z}/{price}/{a}/{b}/{c}/{d}/{e}")]
         public ActionResult Search(string cat, string col, string nam, string x, string y, string z, string price, string a, string b, string c, string d, string e)
         {
-            var order = m.POrderGetByCustId(User.Identity.GetUserId());
+            //var order = m.POrderGetByCustId(User.Identity.GetUserId());
+
             List<string> filterCat = new List<string>();
             if (a != "0") { filterCat.Add(a); }
             if (b != "0") { filterCat.Add(b); }
@@ -843,6 +846,7 @@ namespace _3MA.Controllers
         // id - The Id of the selected product, used to grab the product from the model
         public ActionResult Select(int? id)
         {
+            ViewData["TotalPrice"] = m.POrderGetPriceByCustId(User.Identity.GetUserId());
             var o = m.ProductGetById(id.GetValueOrDefault());
             if (o == null)
             {
@@ -940,7 +944,7 @@ namespace _3MA.Controllers
             }
             //var result = m.POrderUpdateLists(order);
 
-            //var result = m.POrderUpdateCart(User.Identity.GetUserId(), product, (isChecked == "True") ? true : false); 
+            //var result = m.POrderUpdateCart(User.Identity.GetUserId(), product, (isChecked == "True") ? true : false);
 
             var result = m.POrderEdit(order);
 

@@ -168,15 +168,15 @@ namespace _3MA.Controllers
                 string temp = "";
 
 
-                if(DimW != null) { temp = DimW; }
+                if(DimW != null && DimW.Trim() != "") { temp = DimW; }
 
-                if (DimTH != null)
+                if (DimTH != null && DimTH.Trim() != "")
                 {
                     if (temp != "") { temp += " x "; }
                     temp += DimTH;
                 }
 
-                if (DimL != null)
+                if (DimL != null && DimL.Trim() != "")
                 {
                     if (temp != "") { temp += " x "; }
                     temp += DimL;

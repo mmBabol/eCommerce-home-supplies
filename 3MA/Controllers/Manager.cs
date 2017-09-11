@@ -482,6 +482,23 @@ namespace _3MA.Controllers
             return (p == null) ? null : mapper.Map<POrderBase>(p);
         }
 
+        public double POrderGetPriceByCustId(string ID)
+        {
+            // Attempt to fetch the object
+            var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.customerID == ID);
+            if (p == null) { return -1.0; }
+
+            double total = 0;
+
+            foreach (var product in p.AllProducts)
+            {
+                total += product.Price;
+            }
+
+            // Return the price
+            return (total / 0.45);
+        }
+
         public PackageWithProducts PackageGetById(int id)
         {
             // Attempt to fetch the object
@@ -897,7 +914,7 @@ namespace _3MA.Controllers
                 //ds.Attach(account);
                 //ObjectStateEntry entry = context.ObjectStateManager.GetObjectStateEntry(account);
                 //entry.SetModified();
-                
+
 
                 //ds.POrders.SaveChanges();
                 ds.SaveChanges();
@@ -986,7 +1003,7 @@ namespace _3MA.Controllers
             {
                 return false;
             }
-            
+
             if (addToCart)
             {
                 o.AllProducts.Add(product);

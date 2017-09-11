@@ -14,12 +14,33 @@
 
 <hr />
 
+@{
+    double totalPrice = (double)ViewData["TotalPrice"];
+    double totalWithProduct = totalPrice + Model.Price;
+}
+
+@if (totalPrice != -1)
+{
+    <div style="width:100%; height: 32px; text-align: right; padding-bottom: 72px;">
+        <span style="font-size:20px;">Total price: </span><span style="color:darkblue; font-size: 24px;">$@totalPrice.ToString("0.00")</span>
+        <br/>
+        @if (isChecked)
+        {
+            <span id="hiddenTotal" style="color:green; font-size: 18px;">+ $@Model.Price.ToString("0.00") ($@totalWithProduct.ToString("0.00"))</span>
+        }
+        else
+        {
+            <span id="hiddenTotal" style="color:green; font-size: 18px;" hidden>+ $@Model.Price.ToString("0.00") ($@totalWithProduct.ToString("0.00"))</span>
+        }
+    </div>
+}
+
     @*  Left column, includes image, price, dimension, quantity, and order button *@
 <div class="col-sm-12 col-md-5 col-lg-4">
-    <img src="@Model.Image" alt="Cant't find image" style="height:auto; width:100%; max-height: 350px; max-width: 350px; min-height: 250px; min-width: 250px;" />
+    <img src="@Model.Image" alt="Cant't find image" style="height:auto; width:100%; max-height: 350px; max-width: 350px; min-height: 250px; min-width: 250px; border: solid #000 1px" />
 
     <div style="width: 100%; text-align: right; max-width: 350px;">
-        <p style="font-size: 24px; padding-top: 20px; margin-right: 10%;">$<b>@Model.Price.ToString("0.00")</b></p>
+        <p style="font-size: 24px; padding-top: 20px; margin-right: 10%;">$<b>@((Model.Price/0.45).ToString("0.00"))</b></p>
         <p style="font-size: 24px; margin-right: 10%;"><b>@Model.getDim</b></p>
     </div>
     <div style="height: 50px;">
@@ -31,10 +52,25 @@
         <img src="~/images/arrow-right-single.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, 1)" />
         <img src="~/images/arrow-right-double.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px;" onclick="QtyChange(@Model.Id, 10)" />
     </div>
+    <div class="row" style="max-width: 350px;">
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="height:40px; padding-top: 5px;">
+            <div style="width: 160px; height: 32px; background-color: #00aaaa; border: solid 1px #ADD8E6; border-radius: 5px; text-align:center; cursor: pointer;" onclick="clickAddToCart(@Model.Id)">
+                @*"clickAddToCart(@Model.Id)"*@  @* #0000FF *@
+                <p style="font-size: 24px;">Place in cart</p>   @*<img id="@((isChecked) ? "~/images/cart-in.png" : "~/images/cart-out.png")" src="~/images/cart-in.png" style="height:20px; width: 20px;" />*@
+            </div>
+        </div>
 
-    <div style="width: 100%; padding-top: 25px;">
-        <div style="width: 160px; height: 30px; background-color: #00aaaa; border: solid 1px #00FFFF; border-radius: 3px; cursor: pointer;" onclick="clickAddToCart(@Model.Id)">  @*"clickAddToCart(@Model.Id)"*@  @* #0000FF *@
-            Place in cart   <img id="@((isChecked) ? "~/images/cart-in.png" : "~/images/cart-out.png")" src="~/images/cart-in.png" style="height:20px; width: 20px;" />
+        @*<img id="imgCheck" src="@((isChecked) ? "~/images/check-true.png" : "~/images/check-false.png")" style="height:20px; width: 20px;" />*@
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="height:40px;">
+            @if (isChecked)
+            {
+                <img id="imgCheck" src="~/images/check-true.png" style="height:40px; width: 40px;" />
+            }
+            else
+            {
+                <img id="imgCheck" src="~/images/check-false.png" style="height:40px; width: 40px;" />
+
+            }
         </div>
     </div>
 
@@ -49,7 +85,7 @@
 @*<div class="col-lg-1 hidden-xs hidden-sm hidden-md"></div>*@
 
     @*  Right column, includes product details  *@
-<div class="col-sm-12 col-md-7 col-lg-8" style="margin-bottom: 200px;">
+<div class="col-sm-12 col-md-7 col-lg-8" style="margin-bottom: 250px;">
     @if(Model.Specs != "")
     {
        <div style="width: 100%;">
@@ -188,3 +224,7 @@
 
     </dl>
 </div>
+
+
+
+<br/>

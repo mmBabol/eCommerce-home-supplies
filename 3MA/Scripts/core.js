@@ -104,11 +104,21 @@ function QtyChange(id, val) {
 
 function clickAddToCart(id) {
     var isChecked = document.getElementById("hiddenP").innerHTML;
+
     if (isChecked == "True") {
+        document.getElementById("imgCheck").src = "../images/check-false.png";
+        document.getElementById("hiddenTotal").hidden = true;
         isChecked = "False";
     }
     else {
+        //img.src = "../images/check-true.png";
+        document.getElementById("imgCheck").src = "../images/check-true.png";
+        document.getElementById("hiddenTotal").hidden = false;
         isChecked = "True";
+        if (document.getElementById("textQty").value == 0) {
+            document.getElementById("textQty").value = 1;
+            //TODO : save the qty
+        }
     }
     document.getElementById("hiddenP").innerHTML = isChecked;
 
