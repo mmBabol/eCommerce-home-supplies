@@ -439,6 +439,8 @@ namespace _3MA.Controllers
             // Attempt to fetch the object
             var p = ds.POrders.Include("AllProducts").SingleOrDefault(o => o.customerID == ID);
 
+            if(p == null) { return null; }
+
             foreach(var product in p.AllProducts)
             {
                 p.IdProductList.Add(product.Id);

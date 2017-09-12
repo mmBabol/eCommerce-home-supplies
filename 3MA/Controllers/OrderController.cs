@@ -855,33 +855,38 @@ namespace _3MA.Controllers
 
             var order = m.POrderGetByCustId(User.Identity.GetUserId());
 
+            bool isOrder = true, isChecked = false;
+            int quantity = 0;
+
             if (order == null)
             {
-                return HttpNotFound();
+                isOrder = false; ;
             }
 
-            bool isChecked = false;
-            int quantity = 0;
-            foreach(var product in order.AllProducts)
+            if (isOrder)
             {
-                if(product.Id == id)
+                foreach (var product in order.AllProducts)
                 {
-                    isChecked = true;
-                    break;
-                }
-            }
-
-            if (isChecked)
-            {
-                foreach(var qty in order.Qty)
-                {
-                    if(qty.Key == id)
+                    if (product.Id == id)
                     {
-                        quantity = qty.Value;
+                        isChecked = true;
+                        break;
+                    }
+                }
+
+                if (isChecked)
+                {
+                    foreach (var qty in order.Qty)
+                    {
+                        if (qty.Key == id)
+                        {
+                            quantity = qty.Value;
+                        }
                     }
                 }
             }
 
+            ViewData["isOrder"] = isOrder;
             ViewData["isChecked"] = isChecked;
             ViewData["Qty"] = quantity;
 

@@ -5,6 +5,7 @@
     ViewBag.Title = "Select";
 
     // Viewbag get the Qty & isSelected from the controller
+    var isOrder = (bool)ViewData["isOrder"];
     var isChecked = (bool)ViewData["isChecked"];
     var qty = (int)ViewData["Qty"];
 }
@@ -43,36 +44,45 @@
         <p style="font-size: 24px; padding-top: 20px; margin-right: 10%;">$<b>@((Model.Price/0.45).ToString("0.00"))</b></p>
         <p style="font-size: 24px; margin-right: 10%;"><b>@Model.getDim</b></p>
     </div>
-    <div style="height: 50px;">
-        <img src="~/images/arrow-left-double.png" class="img-border" alt="Left" style="width:auto; height:25px; float:left; margin-right:5px;" onclick="QtyChange(@Model.Id, -10)" />
-        <img src="~/images/arrow-left-single.png" class="img-border" alt="Left" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, -1)" />
+    @if (isOrder)
+    {
+        <div style="height: 50px;">
+            <img src="~/images/arrow-left-double.png" class="img-border" alt="Left" style="width:auto; height:25px; float:left; margin-right:5px;" onclick="QtyChange(@Model.Id, -10)" />
+            <img src="~/images/arrow-left-single.png" class="img-border" alt="Left" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, -1)" />
 
-        <input type="text" id="textQty" name="textQty" style="float: left; max-width: 75px; width:auto; text-align:center" value="@qty" onformchange="QtyChange(@Model.Id, 0)" />
+            <input type="text" id="textQty" name="textQty" style="float: left; max-width: 75px; width:auto; text-align:center" value="@qty" onformchange="QtyChange(@Model.Id, 0)" />
 
-        <img src="~/images/arrow-right-single.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, 1)" />
-        <img src="~/images/arrow-right-double.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px;" onclick="QtyChange(@Model.Id, 10)" />
-    </div>
-    <div class="row" style="max-width: 350px;">
-        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="height:40px; padding-top: 5px;">
-            <div style="width: 160px; height: 32px; background-color: #00aaaa; border: solid 1px #ADD8E6; border-radius: 5px; text-align:center; cursor: pointer;" onclick="clickAddToCart(@Model.Id)">
-                @*"clickAddToCart(@Model.Id)"*@  @* #0000FF *@
-                <p style="font-size: 24px;">Place in cart</p>   @*<img id="@((isChecked) ? "~/images/cart-in.png" : "~/images/cart-out.png")" src="~/images/cart-in.png" style="height:20px; width: 20px;" />*@
+            <img src="~/images/arrow-right-single.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px; margin-right:5px;" onclick="QtyChange(@Model.Id, 1)" />
+            <img src="~/images/arrow-right-double.png" class="img-border" alt="Right" style="width:auto; height:25px; float:left; margin-left:5px;" onclick="QtyChange(@Model.Id, 10)" />
+        </div>
+        <div class="row" style="max-width: 350px;">
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="height:40px; padding-top: 5px;">
+                <div style="width: 160px; height: 32px; background-color: #00aaaa; border: solid 1px #ADD8E6; border-radius: 5px; text-align:center; cursor: pointer;" onclick="clickAddToCart(@Model.Id)">
+                    @*"clickAddToCart(@Model.Id)"*@  @* #0000FF *@
+                    <p style="font-size: 24px;">Place in cart</p>   @*<img id="@((isChecked) ? "~/images/cart-in.png" : "~/images/cart-out.png")" src="~/images/cart-in.png" style="height:20px; width: 20px;" />*@
+                </div>
+            </div>
+
+            @*<img id="imgCheck" src="@((isChecked) ? "~/images/check-true.png" : "~/images/check-false.png")" style="height:20px; width: 20px;" />*@
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="height:40px;">
+                @if (isChecked)
+                {
+                    <img id="imgCheck" src="~/images/check-true.png" style="height:40px; width: 40px;" />
+                }
+                else
+                {
+                    <img id="imgCheck" src="~/images/check-false.png" style="height:40px; width: 40px;" />
+
+                }
             </div>
         </div>
-
-        @*<img id="imgCheck" src="@((isChecked) ? "~/images/check-true.png" : "~/images/check-false.png")" style="height:20px; width: 20px;" />*@
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="height:40px;">
-            @if (isChecked)
-            {
-                <img id="imgCheck" src="~/images/check-true.png" style="height:40px; width: 40px;" />
-            }
-            else
-            {
-                <img id="imgCheck" src="~/images/check-false.png" style="height:40px; width: 40px;" />
-
-            }
+    }
+    else
+    {
+        <div style="text-align:right; width: 100%; max-width:350px; padding-bottom: 50px;">
+            <span style="font-size:18px;">To order this product, please @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</span>
         </div>
-    </div>
+    }
 
     <p id="hiddenP" hidden>@isChecked</p>
 

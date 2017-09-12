@@ -7,13 +7,13 @@ namespace _3MA.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Update_context : IMigrationMetadata
+    public sealed partial class Product_AddToCart : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Update_context));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Product_AddToCart));
         
         string IMigrationMetadata.Id
         {
-            get { return "201709071454070_Update_context"; }
+            get { return "201709112358534_Product_AddToCart"; }
         }
         
         string IMigrationMetadata.Source
